@@ -14,6 +14,9 @@ const SchoolsStack = createStackNavigator({
 });
 
 SchoolsStack.navigationOptions = {
+  tabBarOptions: {
+    activeTintColor: '#4F922F'
+  },
   tabBarLabel: 'Schools',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
@@ -28,6 +31,9 @@ const BlogStack = createStackNavigator({
 });
 
 BlogStack.navigationOptions = {
+  tabBarOptions: {
+    activeTintColor: '#4F922F'
+  },
   tabBarLabel: 'Blog',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
