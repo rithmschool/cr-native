@@ -6,11 +6,7 @@ import {
 } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-<<<<<<< HEAD
-import HomeScreen from '../screens/HomeScreen';
-=======
 import SchoolsScreen from '../screens/SchoolsScreen';
->>>>>>> master
 import BlogScreen from '../screens/BlogScreen';
 
 const SchoolsStack = createStackNavigator({
