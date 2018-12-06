@@ -6,14 +6,18 @@ import {
 } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
+<<<<<<< HEAD
 import HomeScreen from '../screens/HomeScreen';
+=======
+import SchoolsScreen from '../screens/SchoolsScreen';
+>>>>>>> master
 import BlogScreen from '../screens/BlogScreen';
 
-const HomeStack = createStackNavigator({
-  Home: HomeScreen
+const SchoolsStack = createStackNavigator({
+  School: SchoolsScreen
 });
 
-HomeStack.navigationOptions = {
+SchoolsStack.navigationOptions = {
   tabBarLabel: 'Schools',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
@@ -24,7 +28,7 @@ HomeStack.navigationOptions = {
 };
 
 const BlogStack = createStackNavigator({
-  Blogs: BlogScreen
+  Blog: BlogScreen
 });
 
 BlogStack.navigationOptions = {
@@ -38,6 +42,6 @@ BlogStack.navigationOptions = {
 };
 
 export default createBottomTabNavigator({
-  HomeStack,
+  SchoolsStack,
   BlogStack
 });
