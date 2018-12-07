@@ -3,10 +3,10 @@ import { View, Text } from 'react-native';
 
 class SchoolScreen extends Component {
   render() {
-    let school = this.props.navigation.getParam('school');
+    let schoolId = this.props.navigation.getParam('id');
     return (
       <View>
-        <Text>{school.id}</Text>
+        <Text>{schoolId}</Text>
       </View>
     );
   }

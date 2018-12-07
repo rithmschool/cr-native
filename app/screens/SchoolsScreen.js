@@ -47,7 +47,9 @@ export default class SchoolsScreen extends React.Component {
     }
     let schoolCards = this.state.schools.slice(0, 5).map(school => (
       <TouchableOpacity
-        onPress={() => this.props.navigation.navigate('School', { school })}
+        onPress={() =>
+          this.props.navigation.navigate('School', { id: school.id })
+        }
         key={school.id}
       >
         <SchoolCard school={school} />
