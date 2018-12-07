@@ -8,6 +8,7 @@ import {
 import TabBarIcon from '../components/TabBarIcon';
 import SchoolsScreen from '../screens/SchoolsScreen';
 import BlogScreen from '../screens/BlogScreen';
+import ContactScreen from '../screens/ContactScreen';
 
 const SchoolsStack = createStackNavigator({
   School: SchoolsScreen
@@ -15,6 +16,20 @@ const SchoolsStack = createStackNavigator({
 
 SchoolsStack.navigationOptions = {
   tabBarLabel: 'Schools',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? `ios-school` : 'md-school'}
+    />
+  )
+};
+
+const ContactStack = createStackNavigator({
+  Contact: ContactScreen
+});
+
+ContactStack.navigationOptions = {
+  tabBarLabel: 'Contact',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -39,5 +54,6 @@ BlogStack.navigationOptions = {
 
 export default createBottomTabNavigator({
   SchoolsStack,
-  BlogStack
+  BlogStack,
+  ContactStack
 });
