@@ -43,9 +43,8 @@ const styles = StyleSheet.create({
     height: 'auto'
   },
   image: {
-    width: 200,
-    height: 200,
-    resizeMode: 'contain'
+    width: 50,
+    height: 50
   }
 });
 

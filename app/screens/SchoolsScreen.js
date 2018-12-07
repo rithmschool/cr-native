@@ -15,7 +15,7 @@ import { MonoText } from '../components/StyledText';
 import SchoolCard from '../components/SchoolCard';
 const BASE_URL = 'http://192.168.1.227:3001';
 
-export default class HomeScreen extends React.Component {
+export default class SchoolsScreen extends React.Component {
   static navigationOptions = {
     header: null
   };
@@ -45,9 +45,14 @@ export default class HomeScreen extends React.Component {
         />
       );
     }
-    let schoolCards = this.state.schools
-      .slice(0, 5)
-      .map(school => <SchoolCard key={school.id} school={school} />);
+    let schoolCards = this.state.schools.slice(0, 5).map(school => (
+      <TouchableOpacity
+        onPress={() => this.props.navigation.navigate('School', { school })}
+        key={school.id}
+      >
+        <SchoolCard school={school} />
+      </TouchableOpacity>
+    ));
 
     return (
       <ScrollView style={styles.container}>

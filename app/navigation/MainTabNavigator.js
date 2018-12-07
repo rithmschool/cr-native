@@ -8,9 +8,11 @@ import {
 import TabBarIcon from '../components/TabBarIcon';
 import SchoolsScreen from '../screens/SchoolsScreen';
 import BlogScreen from '../screens/BlogScreen';
+import SchoolScreen from '../screens/SchoolScreen';
 
 const SchoolsStack = createStackNavigator({
-  School: SchoolsScreen
+  Schools: SchoolsScreen,
+  School: SchoolScreen
 });
 
 SchoolsStack.navigationOptions = {
