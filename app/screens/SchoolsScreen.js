@@ -45,9 +45,9 @@ export default class HomeScreen extends React.Component {
         />
       );
     }
-    let schoolCards = this.state.schools.map(school => (
-      <SchoolCard key={school.id} school={school} />
-    ));
+    let schoolCards = this.state.schools
+      .slice(0, 100)
+      .map(school => <SchoolCard key={school.id} school={school} />);
 
     return (
       <ScrollView style={styles.container}>

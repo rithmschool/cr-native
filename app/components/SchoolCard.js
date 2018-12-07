@@ -1,11 +1,24 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, Image } from 'react-native';
 
 class SchoolCard extends React.Component {
   render() {
     return (
       <View>
+        {/* <Image
+          source={{ uri: this.props.school.logo_url }}
+          style={styles.image}
+        /> */}
+        <Image
+          style={{ width: 50, height: 50, resizeMethod: 'resize' }}
+          source={{
+            uri: this.props.school.logo_url
+          }}
+        />
+        <Text>{this.props.school.logo_url}</Text>
         <Text>{this.props.school.name}</Text>
+        <Text>{this.props.school.avg_review_rating}</Text>
+        <Text>{this.props.school.cities}</Text>
       </View>
     );
   }
@@ -28,6 +41,11 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     width: '100%',
     height: 'auto'
+  },
+  image: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain'
   }
 });
 
