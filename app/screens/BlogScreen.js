@@ -4,8 +4,8 @@ import { ExpoLinksView } from '@expo/samples';
 
 _loadResources = async () => {
   try{
-    const url = 'http://192.168.1.227:3001/blog';
-    // const url = 'http://192.168.1.8:3001/blog';
+    // const url = 'http://192.168.1.227:3001/blog';
+    const url = 'http://192.168.1.8:3001/blog';
     let response = await fetch(url);
     let responseJson = await response.json();
     return responseJson.posts
