@@ -46,7 +46,7 @@ export default class HomeScreen extends React.Component {
       );
     }
     let schoolCards = this.state.schools
-      .slice(0, 100)
+      .slice(0, 5)
       .map(school => <SchoolCard key={school.id} school={school} />);
 
     return (

@@ -10,7 +10,7 @@ class SchoolCard extends React.Component {
           style={styles.image}
         /> */}
         <Image
-          style={{ width: 50, height: 50, resizeMethod: 'resize' }}
+          style={{ width: 50, height: 50 }}
           source={{
             uri: this.props.school.logo_url
           }}
