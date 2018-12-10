@@ -9,15 +9,17 @@ import {
   View,
   ActivityIndicator
 } from 'react-native';
+import { List } from 'native-base';
 import { WebBrowser } from 'expo';
 import axios from 'axios';
 import { MonoText } from '../components/StyledText';
 import SchoolCard from '../components/SchoolCard';
+
 const BASE_URL = 'http://192.168.1.227:3001';
 
 export default class SchoolsScreen extends React.Component {
   static navigationOptions = {
-    header: null
+    title: 'Schools'
   };
 
   state = {
@@ -45,22 +47,19 @@ export default class SchoolsScreen extends React.Component {
         />
       );
     }
-    let schoolCards = this.state.schools.slice(0, 5).map(school => (
-      <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('School', { id: school.id })
-        }
+    let schoolCards = this.state.schools.slice(0, 20).map(school => {
+      return <SchoolCard 
+        school={school} 
+        navigate={() => this.props.navigation.navigate('School', { id: school.id })}
         key={school.id}
-      >
-        <SchoolCard school={school} />
-      </TouchableOpacity>
-    ));
+      />
+    });
 
     return (
       <ScrollView style={styles.container}>
-        <Text>Schools</Text>
-
+        <List>
         {schoolCards}
+        </List>
       </ScrollView>
     );
   }

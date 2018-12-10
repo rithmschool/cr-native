@@ -8,6 +8,7 @@ import {
 import TabBarIcon from '../components/TabBarIcon';
 import SchoolsScreen from '../screens/SchoolsScreen';
 import BlogScreen from '../screens/BlogScreen';
+import PostScreen from '../screens/PostScreen';
 import SchoolScreen from '../screens/SchoolScreen';
 import ContactScreen from '../screens/ContactScreen';
 
@@ -44,7 +45,9 @@ ContactStack.navigationOptions = {
 };
 
 const BlogStack = createStackNavigator({
-  Blog: BlogScreen
+  Blog: BlogScreen,
+  Post: PostScreen
+
 });
 
 BlogStack.navigationOptions = {
