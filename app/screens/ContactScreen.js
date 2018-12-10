@@ -1,15 +1,6 @@
 import React from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  Button,
-  Picker,
-  Text,
-  Modal,
-  View,
-  Platform
-} from 'react-native';
+import { StyleSheet } from 'react-native';
+import { Container, Header, Content, Picker, Form, Button, Text, Input, Item, Label } from "native-base";
 import { ExpoLinksView } from '@expo/samples';
 
 export default class LinksScreen extends React.Component {
@@ -24,101 +15,103 @@ export default class LinksScreen extends React.Component {
       course_id: '',
       school_id: '',
       contact: '',
-      modalVisible: false
-      // contact_email: ''
+      modalVisible: false,
+      contact_email: '',
+      contact: '',
     };
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   static defaultProps = {
-    campus_id: 455,
-    school_id: 153,
-    campuses: { Rio: 1, 'Sao Paulo': 2, 'San Francisco': 3, Fremont: 4 },
-    courses: { 'Full Stack Web Development': 510, 'Meme Development': 415 },
-    course_ids: []
+    school: {
+      id: 153,
+      name: 'Le Wagon',
+      campuses: {
+        455: {
+          name: 'San Francisco',
+          courses: [
+            {
+              id: 3342,
+              name: 'Ruby for Dummies',
+            },
+            {
+              id: 3343,
+              name: 'Ruby for Iiiidiots',
+            }
+          ]
+        },
+        456: {
+          name: 'Berkeley',
+          courses: [
+            {
+              id: 3344,
+              name: 'Java for CS Losers',
+            },
+            {
+              id: 3345,
+              name: 'Java for limo drivers',
+            }
+          ]
+        }
+      },
+      contact: {
+        name: 'Cédric',
+        email: 'cedric@lewagon.com',
+      }
+
+    }
   };
 
   static navigationOptions = {
     title: 'Start The Conversation'
   };
 
-  handleSubmit() {
-    console.log(this.state);
+  handleChange(evt) {
+    const key = evt.target.name;
+    const value = evt.target.value;
+    this.setState({[key]: value});
+    console.warning(this.state);
   }
 
-  setModalVisible(visible) {
-    this.setState({ modalVisible: visible });
+  handleSubmit() {
+    console.warning(this.state);
   }
 
   render() {
-    const campusEntries = Object.entries(this.props.campuses);
-
-    const campusItems = campusEntries.map(entry => (
-      <Picker.Item label={entry[0]} value={entry[1]} />
+    const campusEntries = Object.entries(this.props.school.campuses);
+    const campusItems = campusEntries.map(campus => (
+      <Picker.Item key={campus[0]} label={campus[1].name} value={campus[0]} />
     ));
 
     let coursePicker;
     if(Platform.OS === 'android') {
       coursePicker = (<Picker
-        selectedValue={this.state.language}
+        selectedValue={this.state.campus_id}
         style={styles.picker}
-        onValueChange={(itemValue, itemIndex) =>
-          this.setState({ course_id: itemValue })
-        }
+        onValueChange={(itemValue, itemIndex) => {
+          this.setState({ campus_id: itemValue })
+          console.log(this.state);
+        }}
       >
         {campusItems}
       </Picker>)
     } else {
-      coursePicker = (<Text>
-        Here!!
-        </Text>)
+
     }
 
     return (
-      <View style={styles.container}>
-        <Text>Name</Text>
-        <TextInput
-          lable="Name"
-          placeholder="Name"
-          value={this.state.name}
-          onChangeText={name => this.setState({ name })}
-        />
-        <Text>Email</Text>
-        <TextInput
-          lable="Email"
-          placeholder="Email"
-          value={this.state.email}
-          onChangeText={email => this.setState({ email })}
-        />
-        <Text>Phone Number</Text>
-        <TextInput
-          lable="Phone Number"
-          placeholder="Phone Number"
-          value={this.state.phone}
-          onChangeText={phone => this.setState({ phone })}
-        />
-        <Text>Message</Text>
-        <TextInput
-          lable="Message"
-          placeholder="Message"
-          value={this.state.message}
-          onChangeText={message => this.setState({ message })}
-        />
-        <Text>Campus</Text>
-       {coursePicker}
-
-        {/* <Picker
-          selectedValue={this.state.language}
-          style={{ height: 50, width: 100 }}
-          onValueChange={(itemValue, itemIndex) =>
-            this.setState({ language: itemValue })
-          }
-        >
-          <Picker.Item label="Java" value="java" />
-          <Picker.Item label="JavaScript" value="js" />
-        </Picker> */}
-        <Button title="Submit" onPress={this.handleSubmit} />
-      </View>
+      <Container>
+        <Header />
+        <Form>
+          <Content>
+            <Item regular>
+              <Label></Label>
+              <Input placeholder='here'>
+            </Item>
+         </Content>
+        </Form>
+      </Container>
     );
   }
 }
