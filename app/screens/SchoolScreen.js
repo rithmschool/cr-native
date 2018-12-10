@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
   Image,
+  ScrollView,
   View,
   Text,
   Button,
@@ -34,17 +35,23 @@ class SchoolScreen extends Component {
         />
       );
     }
+    console.log(this.state.school);
+
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Text style={styles.name}>{this.state.school.name}</Text>
-        <Image
-          style={styles.image}
-          source={{
-            uri: this.state.school.logo_url
-          }}
-        />
-        <Text>{this.state.school.about}</Text>
-        <Text>Rating: {this.state.school.avg_review_rating}</Text>
+        <View style={styles.imageParent}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: this.state.school.logo_url
+            }}
+          />
+          <Text>{this.state.school.avg_review_rating} stars</Text>
+          <Text>{this.state.school.review_count} reviews</Text>
+        </View>
+
+        <Text style={styles.about}>{this.state.school.about}</Text>
         <Button
           onPress={() =>
             this.props.navigation.navigate('Contact', {
@@ -55,7 +62,7 @@ class SchoolScreen extends Component {
           color="#4F922F"
           accessibilityLabel="Contact this school"
         />
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -67,7 +74,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
+    padding: 30,
     backgroundColor: '#fff'
   },
 
@@ -75,7 +82,18 @@ const styles = StyleSheet.create({
     fontSize: 35,
     textAlign: 'center'
   },
-  image: { width: 100, height: 100, textAlign: 'center', margin: 15 }
+  image: {
+    width: 100,
+    height: 100,
+    margin: 15
+  },
+  imageParent: {
+    alignItems: 'center'
+  },
+  about: {
+    margin: 10,
+    marginTop: 20
+  }
 });
 
 export default SchoolScreen;
