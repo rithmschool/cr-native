@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Container, Header, Content, Picker, Form, Button, Text, Input, Item, Label } from "native-base";
+import { Container, Header, Content, Picker, Form, Button, Text, Input, Item, Label, Textarea } from "native-base";
 import { ExpoLinksView } from '@expo/samples';
 
 export default class LinksScreen extends React.Component {
@@ -20,7 +20,7 @@ export default class LinksScreen extends React.Component {
       contact: '',
     };
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    // this.handleName = this.handleName.bind(this);
   }
 
   static defaultProps = {
@@ -67,11 +67,20 @@ export default class LinksScreen extends React.Component {
     title: 'Start The Conversation'
   };
 
-  handleChange(evt) {
-    const key = evt.target.name;
-    const value = evt.target.value;
-    this.setState({[key]: value});
-    console.warning(this.state);
+  handleName = (text) => {
+    this.setState({name:text});
+  }
+
+  handleEmail = (text) => {
+    this.setState({email:text});
+  }
+
+  handlePhone = (text) => {
+    this.setState({phone:text});
+  }
+
+  handleMessage = (text) => {
+    this.setState({message:text});
   }
 
   handleSubmit() {
@@ -84,9 +93,7 @@ export default class LinksScreen extends React.Component {
       <Picker.Item key={campus[0]} label={campus[1].name} value={campus[0]} />
     ));
 
-    let coursePicker;
-    if(Platform.OS === 'android') {
-      coursePicker = (<Picker
+    let coursePicker = (<Picker
         selectedValue={this.state.campus_id}
         style={styles.picker}
         onValueChange={(itemValue, itemIndex) => {
@@ -96,22 +103,34 @@ export default class LinksScreen extends React.Component {
       >
         {campusItems}
       </Picker>)
-    } else {
-
-    }
 
     return (
       <Container>
-        <Header />
+      <Header />
+      <Content>
         <Form>
-          <Content>
-            <Item regular>
-              <Label></Label>
-              <Input placeholder='here'>
-            </Item>
-         </Content>
+          <Item floatingLabel>
+            <Label>Name</Label>
+            <Input onChangeText={this.handleName} value={this.state.name}/>
+          </Item>
+          <Item floatingLabel>
+            <Label>Email</Label>
+            <Input onChangeText={this.handleEmail} value={this.state.email}/>
+          </Item>
+          <Item floatingLabel>
+            <Label>Phone</Label>
+            <Input onChangeText={this.handlePhone} value={this.state.phone}/>
+          </Item>
+          <Item floatingLabel last>
+            <Label>Message</Label>
+            <Input onChangeText={this.handleMessage} value={this.state.message}/>
+          </Item>
+          <Button full success>
+            <Text>Submit</Text>
+          </Button>
         </Form>
-      </Container>
+      </Content>
+    </Container>
     );
   }
 }
