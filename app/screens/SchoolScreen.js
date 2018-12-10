@@ -67,7 +67,7 @@ class SchoolScreen extends Component {
         <Button
           onPress={() =>
             this.props.navigation.navigate('Contact', {
-              name: this.state.school.name
+              school: this.state.school
             })
           }
           title="Contact"
