@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { Image, View, Text, Button } from 'react-native';
+import {
+  Image,
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  ActivityIndicator
+} from 'react-native';
 
 import axios from 'axios';
 const BASE_URL = 'http://192.168.1.227:3001';
@@ -14,20 +21,28 @@ class SchoolScreen extends Component {
     let schoolId = this.props.navigation.getParam('id');
     //do the axios call to get the data for an individual school
     let resp = await axios.get(`${BASE_URL}/schools/${schoolId}`);
-    this.setState({ school: resp.data.school });
+    this.setState({ school: resp.data.school, loading: false });
   }
 
   render() {
-    console.log('this.props', this.props);
+    if (this.state.loading) {
+      return (
+        <ActivityIndicator
+          size="large"
+          color="#4F922F"
+          style={styles.activityIndicator}
+        />
+      );
+    }
     return (
-      <View>
+      <View style={styles.container}>
+        <Text style={styles.name}>{this.state.school.name}</Text>
         <Image
-          style={{ width: 100, height: 100 }}
+          style={styles.image}
           source={{
             uri: this.state.school.logo_url
           }}
         />
-        <Text>{this.state.school.name}</Text>
         <Text>{this.state.school.about}</Text>
         <Text>Rating: {this.state.school.avg_review_rating}</Text>
         <Button
@@ -44,5 +59,23 @@ class SchoolScreen extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  activityIndicator: {
+    flex: 1,
+    alignContent: 'center'
+  },
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#fff'
+  },
+
+  name: {
+    fontSize: 35,
+    textAlign: 'center'
+  },
+  image: { width: 100, height: 100, textAlign: 'center', margin: 15 }
+});
 
 export default SchoolScreen;
