@@ -13,7 +13,8 @@ import SchoolScreen from '../screens/SchoolScreen';
 
 const SchoolsStack = createStackNavigator({
   Schools: SchoolsScreen,
-  School: SchoolScreen
+  School: SchoolScreen,
+  Contact: ContactScreen
 });
 
 SchoolsStack.navigationOptions = {
@@ -50,5 +51,5 @@ BlogStack.navigationOptions = {
 
 export default createBottomTabNavigator({
   SchoolsStack,
-  BlogStack,
+  BlogStack
 });
