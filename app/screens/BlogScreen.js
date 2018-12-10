@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Alert, Text, TouchableHighlight, ScrollView, StyleSheet, View } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 
-_loadResources = async () => {
+const loadResources = async () => {
   try{
     // const url = 'http://192.168.1.227:3001/blog';
     const url = 'http://192.168.1.8:3001/blog';
@@ -24,7 +24,7 @@ export default class BlogScreen extends Component {
   };
 
   componentDidMount() {
-    _loadResources()
+    loadResources()
     .then(res => {
       this.setState({
         loading: false,
@@ -35,7 +35,8 @@ export default class BlogScreen extends Component {
     })
   }
 
-  _handleButton = () => {
+  _handleButton = evt => {
+    console.log('clicked', evt.currentTarget)
     Alert.alert('Button Alert', 'You pressed a button',
     [
       {text: 'Cool!'},
@@ -45,7 +46,7 @@ export default class BlogScreen extends Component {
   }
 
   render() {
-    console.log('render ran with state', JSON.stringify(this.state).slice(0,600))
+    // console.log('render ran with state', JSON.stringify(this.state).slice(0,600))
     if (this.state.loading) return <Text>Loading...</Text>
     return (
       <ScrollView style={styles.container}>
@@ -53,9 +54,10 @@ export default class BlogScreen extends Component {
           const date = new Date(post.created_at);
           const formattedDate = date.toDateString();
           return (
-          <View  key={post.id}>
+          <View key={post.id}>
             <TouchableHighlight onPress={this._handleButton} style={styles.cardContainer}>
               <View style={styles.card}>
+                  <Text> {post.id} </Text>
                 <Text style={styles.cardTitle}>{post.title}</Text>
                 <Text>By
                   <Text > {post.author} </Text> 
