@@ -10,6 +10,7 @@ import SchoolsScreen from '../screens/SchoolsScreen';
 import BlogScreen from '../screens/BlogScreen';
 import PostScreen from '../screens/PostScreen';
 import SchoolScreen from '../screens/SchoolScreen';
+import ContactScreen from '../screens/ContactScreen';
 
 const SchoolsStack = createStackNavigator({
   Schools: SchoolsScreen,

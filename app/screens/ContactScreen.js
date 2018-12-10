@@ -1,10 +1,11 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Container, Header, Content, Picker, Form, Button, Text, Input, Item, Label, Textarea } from "native-base";
+import { Container, Header, Content, Picker, Form, Button, Text, Input, Item, Label, Textarea,Icon } from "native-base";
 
-export default class LinksScreen extends React.Component {
+export default class ContactScreen extends React.Component {
   constructor(props) {
     super(props);
+    let school = props.navigation.getParam('school')
     this.state = {
       message: '',
       phone: '',
@@ -12,55 +13,14 @@ export default class LinksScreen extends React.Component {
       email: '',
       campus_id: '',
       course_id: '',
-      school_id: this.props.school.id,
-      contact: this.props.school.contact.name,
-      contact_email: this.props.school.contact.email,
+      school_id: school.id,
+      contact: school.contact.name,
+      contact_email: school.contact.email,
       courseArr:'',
-
+      selected:''
     };
     this.handleSubmit = this.handleSubmit.bind(this);
-    // this.handleName = this.handleName.bind(this);
   }
-
-  static defaultProps = {
-    school: {
-      id: 153,
-      name: 'Le Wagon',
-      campuses: {
-        455: {
-          name: 'San Francisco',
-          courses: [
-            {
-              id: 3342,
-              name: 'Ruby for Dummies',
-            },
-            {
-              id: 3343,
-              name: 'Ruby for Iiiidiots',
-            }
-          ]
-        },
-        456: {
-          name: 'Berkeley',
-          courses: [
-            {
-              id: 3344,
-              name: 'Java for CS Losers',
-            },
-            {
-              id: 3345,
-              name: 'Java for limo drivers',
-            }
-          ]
-        }
-      },
-      contact: {
-        name: 'Cédric',
-        email: 'cedric@lewagon.com',
-      }
-
-    }
-  };
 
   static navigationOptions = {
     title: 'Start The Conversation'
@@ -83,26 +43,52 @@ export default class LinksScreen extends React.Component {
     console.log(this.state)
   }
 
+  handleCampus = (text) => {
+    this.setState({campus_id:text});
+    this.setState({courseArr:text});
+    console.log(this.state)
+  }
+
   handleSubmit() {
     console.warning(this.state);
   }
 
   render() {
-    const campusEntries = Object.entries(this.props.school.campuses);
-    const campusItems = campusEntries.map(campus => (
-      <Picker.Item key={campus[0]} label={campus[1].name} value={campus[0]} />
-    ));
+    const campusItems = [<Picker.Item label="Wallet" value="key0" />,
+    <Picker.Item label="ATM Card" value="key1" />,
+    <Picker.Item label="Debit Card" value="key2" />,
+    <Picker.Item label="Credit Card" value="key3" />,
+    <Picker.Item label="Net Banking" value="key4" />]
 
-    let coursePicker = (<Picker
-        selectedValue={this.state.campus_id}
-        style={styles.picker}
-        onValueChange={(itemValue, itemIndex) => {
-          this.setState({ campus_id: itemValue })
-          console.log(this.state);
-        }}
-      >
-        {campusItems}
-      </Picker>)
+    // const campusEntries = Object.entries(this.props.navigation.getParam('school').campuses);
+    // console.log(this.props.navigation.getParam('school').campuses)
+    // const campusItems = campusEntries.map(campus => (
+    //   <Picker.Item key={campus[0]} label={campus[1].name} value={campus[0]} />
+    // ));
+
+    let coursePicker = 
+    <Picker
+    mode="dropdown"
+    iosIcon={<Icon name="ios-arrow-down-outline" />}
+    placeholder="Select your campus"
+    placeholderStyle={{ color: "#bfc6ea" }}
+    placeholderIconColor="#007aff"
+    style={{ width: undefined }}
+    selectedValue={this.state.selected}
+    onValueChange={this.handleCampus}>
+    {campusItems}
+  </Picker>
+    
+    // (<Picker
+    //     selectedValue={this.state.campus_id}
+    //     style={styles.picker}
+    //     onValueChange={(itemValue, itemIndex) => {
+    //       this.setState({ campus_id: itemValue })
+    //       console.log(this.state);
+    //     }}
+    //   >
+    //     {campusItems}
+    //   </Picker>)
 
     return (
       <Container>
@@ -124,6 +110,9 @@ export default class LinksScreen extends React.Component {
           <Item floatingLabel last>
             <Label>Message</Label>
             <Input onChangeText={this.handleMessage} value={this.state.message}/>
+          </Item>
+          <Item>
+            {coursePicker}
           </Item>
           <Button full success>
             <Text>Submit</Text>
