@@ -1,50 +1,94 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, Image, View } from 'react-native';
+import { ListItem } from 'native-base';
+
+const MAX_LOCATION_CHARS = 48; // max number of characters displayed for locations list
+
+function formatCities(cities) {
+  let locations = cities.reduce((s, c) => s+`${c}, `, '').slice(0,-2);
+  if (locations.length > MAX_LOCATION_CHARS) 
+    locations = locations.slice(0,MAX_LOCATION_CHARS).concat('...');
+  return locations;
+}
 
 class SchoolCard extends React.Component {
+  _handleButton = () => {
+    this.props.navigate()
+  }
+
   render() {
+    let locations = formatCities(this.props.school.cities);
+    console.log(this.props)
     return (
-      <View style={styles.container}>
-        {/* <Image
-          source={{ uri: this.props.school.logo_url }}
-          style={styles.image}
-        /> */}
-        <Image
-          style={{ width: 50, height: 50 }}
-          source={{
-            uri: this.props.school.logo_url
-          }}
-        />
-        <Text>{this.props.school.logo_url}</Text>
-        <Text>{this.props.school.name}</Text>
-        <Text>{this.props.school.avg_review_rating}</Text>
-        <Text>{this.props.school.cities}</Text>
-      </View>
+      <ListItem style={styles.cardContainer}>
+        <TouchableOpacity 
+          onPress={() => this._handleButton(this.props.school.id)} 
+          style={styles.cardContainer}>
+          <View style={styles.cardBody}>
+            <View style={styles.row}>
+              <Text style={styles.cardTitle}>{this.props.school.name}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.cardText}><Text style={styles.cardTextLabel}>Average Review Rating: </Text>{
+                this.props.school.avg_review_rating ? this.props.school.avg_review_rating : 'Not Available'}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.cardText}><Text style={styles.cardTextLabel}>Locations: </Text>{locations}</Text>
+            </View>
+          </View>
+          <View style={styles.imageContainer}>
+            <Image
+              style={styles.image}
+              source={{
+                uri: "https://www.rithmschool.com/assets/logos/300logo-e647a12a86a37452242b8a21b69d9d1dc4062424c1aba75e17ca49ba66787120.jpg"
+              }}
+            />
+          </View>
+        </TouchableOpacity>
+      </ListItem>
     );
   }
 }
 
+
 const styles = StyleSheet.create({
-  container: {
+  row: {
     flex: 1,
-    paddingTop: 15,
-    backgroundColor: '#fff'
+    flexDirection: 'row'
   },
-  card: {
-    textAlign: 'center',
-    padding: 10,
-    width: '100%',
-    height: 'auto',
-    backgroundColor: 'lightgrey'
+  cardTitle: {
+    textAlign: 'left',
+    fontWeight: 'bold',
+    fontSize: 20,
+    paddingVertical: 5,
+  },
+  cardTextLabel: {
+    color: 'black',
+    textAlign: 'left',
+    paddingVertical: 5
+  },
+  cardText: {
+    textAlign: 'left',
+    color: 'gray',
+    fontSize: 12,
+    paddingVertical: 5
+  },
+  cardBody: {
+    flex: 1,
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    width: '70%',
+    paddingLeft: 10
   },
   cardContainer: {
-    marginVertical: 10,
-    width: '100%',
-    height: 'auto'
+    flex: 1,
+    flexDirection: 'row',
+    height: 'auto',
   },
   image: {
-    width: 50,
-    height: 50
+    margin: 20,
+    width: 70,
+    height: 70
   }
 });
 

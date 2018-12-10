@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import { Alert, Text, TouchableHighlight, ScrollView, StyleSheet, View } from 'react-native';
-import { ExpoLinksView } from '@expo/samples';
+import { TouchableOpacity, Image, StyleSheet, View, Text } from 'react-native';
+import { Container, Content, ListItem } from 'native-base';
+import { PROXY_URL } from '../config';
+import axios from 'axios';
 
 const loadResources = async () => {
   try{
-    // const url = 'http://192.168.1.227:3001/blog';
-    const url = 'http://192.168.1.8:3001/blog';
-    let response = await fetch(url);
-    let responseJson = await response.json();
-    return responseJson.posts
+    const url = PROXY_URL + '/blog';
+    let response = await axios({
+      url: url,
+      method: 'get'
+    });
+    let data = await response.data;
+    return data.posts
   } catch (error) {
     console.log('Error:', error)
   }
@@ -20,7 +24,7 @@ export default class BlogScreen extends Component {
   }
 
   static navigationOptions = {
-    title: 'Blog Posts'
+    title: 'Blog'
   };
 
   componentDidMount() {
@@ -35,69 +39,85 @@ export default class BlogScreen extends Component {
     })
   }
 
-  _handleButton = evt => {
-    console.log('clicked', evt.currentTarget)
-    Alert.alert('Button Alert', 'You pressed a button',
-    [
-      {text: 'Cool!'},
-      {text: 'Lame'},
-      {text: 'Cancel', style: 'cancel'}
-    ])
+  _handleButton = id => {
+    this.props.navigation.navigate('Post', { id });
   }
 
   render() {
-    // console.log('render ran with state', JSON.stringify(this.state).slice(0,600))
     if (this.state.loading) return <Text>Loading...</Text>
     return (
-      <ScrollView style={styles.container}>
-        {this.state.posts.map(post => {
-          const date = new Date(post.created_at);
-          const formattedDate = date.toDateString();
-          return (
-          <View key={post.id}>
-            <TouchableHighlight onPress={this._handleButton} style={styles.cardContainer}>
-              <View style={styles.card}>
-                  <Text> {post.id} </Text>
-                <Text style={styles.cardTitle}>{post.title}</Text>
-                <Text>By
-                  <Text > {post.author} </Text> 
-                  <Text> • </Text>
-                  <Text> {formattedDate}</Text>
-                </Text>
+      <Container style={styles.container}>
+        <Content>
+          <View>
+          {this.state.posts.map(post => {
+            const date = new Date(post.created_at);
+            const formattedDate = date.toDateString();
+            return (
+            <ListItem key={post.id}>
+              <TouchableOpacity 
+                onPress={() => this._handleButton(post.id)} 
+                style={styles.cardContainer}>
+                <View>
+                  <Text style={styles.cardTitle}>{post.title}</Text>
+                  <Text style={styles.cardText}>
+                    <Text>By {post.author}</Text>
+                    <Text>  •  </Text>
+                    <Text>{formattedDate}</Text>
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <View style={styles.imageContainer}>
+                <Image
+                  style={styles.image}
+                  source={{
+                    uri: "https://www.rithmschool.com/assets/logos/300logo-e647a12a86a37452242b8a21b69d9d1dc4062424c1aba75e17ca49ba66787120.jpg"
+                  }}
+                />
               </View>
-            </TouchableHighlight>
-            <View
-              style={{
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-              }}
-            />
+            </ListItem>
+            )
+          })}
           </View>
-          )
-        })}
-      </ScrollView>
+        </Content>
+      </Container>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff'
   },
   cardTitle: {
-    fontSize: 18,
-    paddingVertical: 5
+    textAlign: 'left',
+    fontWeight: 'bold',
+    fontSize: 20,
+    paddingVertical: 5,
   },
-  card: {
-    padding: 10,
-    textAlign: 'center',
-    width: "100%",
-    height: 'auto',
-    backgroundColor: 'lightgrey'
+  cardText: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    color: 'gray',
+    textAlign: 'left',
+    fontSize: 12,
+    margin: 'auto'
+  },
+  cardBody: {
+    flex: 1,
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    width: '70%',
+    paddingLeft: 10
   },
   cardContainer: {
-    width: "100%",
+    flex: 1,
+    flexDirection: 'row',
     height: 'auto',
   },
+  image: {
+    margin: 20,
+    width: 70,
+    height: 70
+  }
 });
