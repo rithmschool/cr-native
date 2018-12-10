@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, ScrollView, StyleSheet, View, Text } from 'react-native';
-import { Container, Content, Header, List, ListItem } from 'native-base';
+import { TouchableOpacity, Image, StyleSheet, View, Text } from 'react-native';
+import { Container, Content, ListItem } from 'native-base';
 import { PROXY_URL } from '../config';
 import axios from 'axios';
 
@@ -66,6 +66,14 @@ export default class BlogScreen extends Component {
                   </Text>
                 </View>
               </TouchableOpacity>
+              <View style={styles.imageContainer}>
+                <Image
+                  style={styles.image}
+                  source={{
+                    uri: "https://www.rithmschool.com/assets/logos/300logo-e647a12a86a37452242b8a21b69d9d1dc4062424c1aba75e17ca49ba66787120.jpg"
+                  }}
+                />
+              </View>
             </ListItem>
             )
           })}
@@ -83,15 +91,33 @@ const styles = StyleSheet.create({
   cardTitle: {
     textAlign: 'left',
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 20,
     paddingVertical: 5,
   },
   cardText: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    color: 'gray',
     textAlign: 'left',
-    fontSize: 12
+    fontSize: 12,
+    margin: 'auto'
+  },
+  cardBody: {
+    flex: 1,
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    width: '70%',
+    paddingLeft: 10
   },
   cardContainer: {
-    width: "100%",
+    flex: 1,
+    flexDirection: 'row',
     height: 'auto',
   },
+  image: {
+    margin: 20,
+    width: 70,
+    height: 70
+  }
 });
