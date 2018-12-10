@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@expo/samples": "2.1.1",
+    "axios": "^0.18.0",
     "expo": "^31.0.2",
     "native-base": "^2.8.1",
     "react": "16.5.0",
