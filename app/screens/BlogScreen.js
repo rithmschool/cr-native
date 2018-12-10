@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Alert, Text, TouchableHighlight, ScrollView, StyleSheet, View } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
+import { PROXY_URL } from '../config';
 
 const loadResources = async () => {
   try{
-    // const url = 'http://192.168.1.227:3001/blog';
-    const url = 'http://192.168.1.8:3001/blog';
+    const url = PROXY_URL + '/blog';
     let response = await fetch(url);
     let responseJson = await response.json();
     return responseJson.posts
@@ -35,9 +35,9 @@ export default class BlogScreen extends Component {
     })
   }
 
-  _handleButton = evt => {
-    console.log('clicked', evt.currentTarget)
-    Alert.alert('Button Alert', 'You pressed a button',
+  _handleButton = id => {
+    this.props.navigation.navigate('Post', { id });
+    Alert.alert('Button Alert', `You pressed a button ${id}`,
     [
       {text: 'Cool!'},
       {text: 'Lame'},
@@ -55,10 +55,12 @@ export default class BlogScreen extends Component {
           const formattedDate = date.toDateString();
           return (
           <View key={post.id}>
-            <TouchableHighlight onPress={this._handleButton} style={styles.cardContainer}>
+            <TouchableHighlight 
+              onPress={() => this._handleButton(post.id)} 
+              style={styles.cardContainer}>
               <View style={styles.card}>
-                  <Text> {post.id} </Text>
                 <Text style={styles.cardTitle}>{post.title}</Text>
+                <Text>Blog #{post.id}</Text>
                 <Text>By
                   <Text > {post.author} </Text> 
                   <Text> • </Text>
