@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import axios from 'axios';
+
 const BASE_URL = 'http://192.168.1.227:3001';
 
 class SchoolScreen extends Component {
@@ -19,10 +20,14 @@ class SchoolScreen extends Component {
   };
 
   async componentDidMount() {
-    let schoolId = this.props.navigation.getParam('id');
-    //do the axios call to get the data for an individual school
-    let resp = await axios.get(`${BASE_URL}/schools/${schoolId}`);
-    this.setState({ school: resp.data.school, loading: false });
+    try {
+      let schoolId = this.props.navigation.getParam('id');
+      //do the axios call to get the data for an individual school
+      let resp = await axios.get(`${BASE_URL}/schools/${schoolId}`);
+      this.setState({ school: resp.data.school, loading: false });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   render() {
@@ -35,7 +40,10 @@ class SchoolScreen extends Component {
         />
       );
     }
-    console.log(this.state.school);
+
+    let reviews = this.state.school.reviews.map(review => (
+      <Text>{review.body}</Text>
+    ));
 
     return (
       <ScrollView style={styles.container}>
@@ -44,10 +52,14 @@ class SchoolScreen extends Component {
           <Image
             style={styles.image}
             source={{
-              uri: this.state.school.logo_url
+              uri: this.state.school.logo
             }}
           />
-          <Text>{this.state.school.avg_review_rating} stars</Text>
+          {this.state.school.avg_review_rating ? (
+            <Text>{this.state.school.avg_review_rating} stars</Text>
+          ) : (
+            <Text />
+          )}
           <Text>{this.state.school.review_count} reviews</Text>
         </View>
 
@@ -62,6 +74,7 @@ class SchoolScreen extends Component {
           color="#4F922F"
           accessibilityLabel="Contact this school"
         />
+        {reviews}
       </ScrollView>
     );
   }
