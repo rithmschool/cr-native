@@ -4,7 +4,7 @@ import { ScrollView, StyleSheet, Text, View, Image } from 'react-native';
 class SchoolCard extends React.Component {
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         {/* <Image
           source={{ uri: this.props.school.logo_url }}
           style={styles.image}
