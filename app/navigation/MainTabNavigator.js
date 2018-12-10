@@ -13,8 +13,7 @@ import ContactScreen from '../screens/ContactScreen';
 
 const SchoolsStack = createStackNavigator({
   Schools: SchoolsScreen,
-  School: SchoolScreen,
-  Blog: BlogScreen
+  School: SchoolScreen
 });
 
 SchoolsStack.navigationOptions = {
