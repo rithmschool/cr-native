@@ -12,11 +12,11 @@ export default class LinksScreen extends React.Component {
       email: '',
       campus_id: '',
       course_id: '',
-      school_id: '',
-      contact: '',
-      modalVisible: false,
-      contact_email: '',
-      contact: '',
+      school_id: this.props.school.id,
+      contact: this.props.school.contact.name,
+      contact_email: this.props.school.contact.email,
+      courseArr:'',
+
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     // this.handleName = this.handleName.bind(this);
@@ -80,6 +80,7 @@ export default class LinksScreen extends React.Component {
 
   handleMessage = (text) => {
     this.setState({message:text});
+    console.log(this.state)
   }
 
   handleSubmit() {
