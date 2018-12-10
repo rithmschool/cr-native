@@ -8,12 +8,17 @@ import {
 import TabBarIcon from '../components/TabBarIcon';
 import SchoolsScreen from '../screens/SchoolsScreen';
 import BlogScreen from '../screens/BlogScreen';
+import SchoolScreen from '../screens/SchoolScreen';
 
 const SchoolsStack = createStackNavigator({
-  School: SchoolsScreen
+  Schools: SchoolsScreen,
+  School: SchoolScreen
 });
 
 SchoolsStack.navigationOptions = {
+  tabBarOptions: {
+    activeTintColor: '#4F922F'
+  },
   tabBarLabel: 'Schools',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
@@ -28,6 +33,9 @@ const BlogStack = createStackNavigator({
 });
 
 BlogStack.navigationOptions = {
+  tabBarOptions: {
+    activeTintColor: '#4F922F'
+  },
   tabBarLabel: 'Blog',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
