@@ -57,7 +57,7 @@ export default class BlogScreen extends Component {
               <TouchableOpacity 
                 onPress={() => this._handleButton(post.id)} 
                 style={styles.cardContainer}>
-                <View style={styles.card}>
+                <View>
                   <Text style={styles.cardTitle}>{post.title}</Text>
                   <Text style={styles.cardText}>
                     <Text>By {post.author}</Text>
@@ -89,11 +89,6 @@ const styles = StyleSheet.create({
   cardText: {
     textAlign: 'left',
     fontSize: 12
-  },
-  card: {
-    padding: 10,
-    width: "100%",
-    height: 'auto',
   },
   cardContainer: {
     width: "100%",
