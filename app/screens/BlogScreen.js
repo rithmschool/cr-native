@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import { Alert, Text, TouchableHighlight, ScrollView, StyleSheet, View } from 'react-native';
-import { ExpoLinksView } from '@expo/samples';
+import { TouchableOpacity, ScrollView, StyleSheet, View, Text } from 'react-native';
+import { Container, Content, Header, List, ListItem } from 'native-base';
 import { PROXY_URL } from '../config';
+import axios from 'axios';
 
 const loadResources = async () => {
   try{
     const url = PROXY_URL + '/blog';
-    let response = await fetch(url);
-    let responseJson = await response.json();
-    return responseJson.posts
+    let response = await axios({
+      url: url,
+      method: 'get'
+    });
+    let data = await response.data;
+    return data.posts
   } catch (error) {
     console.log('Error:', error)
   }
@@ -20,7 +24,7 @@ export default class BlogScreen extends Component {
   }
 
   static navigationOptions = {
-    title: 'Blog Posts'
+    title: 'Blog'
   };
 
   componentDidMount() {
@@ -37,66 +41,59 @@ export default class BlogScreen extends Component {
 
   _handleButton = id => {
     this.props.navigation.navigate('Post', { id });
-    Alert.alert('Button Alert', `You pressed a button ${id}`,
-    [
-      {text: 'Cool!'},
-      {text: 'Lame'},
-      {text: 'Cancel', style: 'cancel'}
-    ])
   }
 
   render() {
-    // console.log('render ran with state', JSON.stringify(this.state).slice(0,600))
     if (this.state.loading) return <Text>Loading...</Text>
     return (
-      <ScrollView style={styles.container}>
-        {this.state.posts.map(post => {
-          const date = new Date(post.created_at);
-          const formattedDate = date.toDateString();
-          return (
-          <View key={post.id}>
-            <TouchableHighlight 
-              onPress={() => this._handleButton(post.id)} 
-              style={styles.cardContainer}>
-              <View style={styles.card}>
-                <Text style={styles.cardTitle}>{post.title}</Text>
-                <Text>Blog #{post.id}</Text>
-                <Text>By
-                  <Text > {post.author} </Text> 
-                  <Text> • </Text>
-                  <Text> {formattedDate}</Text>
-                </Text>
-              </View>
-            </TouchableHighlight>
-            <View
-              style={{
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-              }}
-            />
+      <Container style={styles.container}>
+        <Content>
+          <View>
+          {this.state.posts.map(post => {
+            const date = new Date(post.created_at);
+            const formattedDate = date.toDateString();
+            return (
+            <ListItem key={post.id}>
+              <TouchableOpacity 
+                onPress={() => this._handleButton(post.id)} 
+                style={styles.cardContainer}>
+                <View style={styles.card}>
+                  <Text style={styles.cardTitle}>{post.title}</Text>
+                  <Text style={styles.cardText}>
+                    <Text>By {post.author}</Text>
+                    <Text>  •  </Text>
+                    <Text>{formattedDate}</Text>
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </ListItem>
+            )
+          })}
           </View>
-          )
-        })}
-      </ScrollView>
+        </Content>
+      </Container>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff'
   },
   cardTitle: {
+    textAlign: 'left',
+    fontWeight: 'bold',
     fontSize: 18,
-    paddingVertical: 5
+    paddingVertical: 5,
+  },
+  cardText: {
+    textAlign: 'left',
+    fontSize: 12
   },
   card: {
     padding: 10,
-    textAlign: 'center',
     width: "100%",
     height: 'auto',
-    backgroundColor: 'lightgrey'
   },
   cardContainer: {
     width: "100%",
