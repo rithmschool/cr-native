@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Container, Header, Content, Picker, Form, Button, Text, Input, Item, Label, Textarea } from "native-base";
-import { ExpoLinksView } from '@expo/samples';
 
 export default class LinksScreen extends React.Component {
   constructor(props) {
