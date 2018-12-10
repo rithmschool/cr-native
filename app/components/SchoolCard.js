@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, Image, View } from 'react-native';
 import { ListItem } from 'native-base';
+import styles from '../screens/CardStylesheet';
 
 const MAX_LOCATION_CHARS = 48; // max number of characters displayed for locations list
 
@@ -18,7 +19,6 @@ class SchoolCard extends React.Component {
 
   render() {
     let locations = formatCities(this.props.school.cities);
-    console.log(this.props)
     return (
       <ListItem style={styles.cardContainer}>
         <TouchableOpacity 
@@ -49,47 +49,5 @@ class SchoolCard extends React.Component {
     );
   }
 }
-
-
-const styles = StyleSheet.create({
-  row: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  cardTitle: {
-    textAlign: 'left',
-    fontWeight: 'bold',
-    fontSize: 20,
-    paddingVertical: 5,
-  },
-  cardTextLabel: {
-    color: 'black',
-    textAlign: 'left',
-    paddingVertical: 5
-  },
-  cardText: {
-    textAlign: 'left',
-    color: 'gray',
-    fontSize: 12,
-    paddingVertical: 5
-  },
-  cardBody: {
-    flex: 1,
-    flexDirection: 'column',
-    flexWrap: 'wrap',
-    width: '70%',
-    paddingLeft: 10
-  },
-  cardContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    height: 'auto',
-  },
-  image: {
-    margin: 20,
-    width: 70,
-    height: 70
-  }
-});
 
 export default SchoolCard;

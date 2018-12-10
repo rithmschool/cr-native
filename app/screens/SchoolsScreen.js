@@ -1,18 +1,7 @@
 import React from 'react';
-import {
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ActivityIndicator
-} from 'react-native';
-import { List } from 'native-base';
-import { WebBrowser } from 'expo';
+import { ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { Container, Content, List } from 'native-base';
 import axios from 'axios';
-import { MonoText } from '../components/StyledText';
 import SchoolCard from '../components/SchoolCard';
 
 const BASE_URL = 'http://192.168.1.227:3001';
@@ -56,65 +45,21 @@ export default class SchoolsScreen extends React.Component {
     });
 
     return (
-      <ScrollView style={styles.container}>
+      <Container>
+        <Content>
         <List>
         {schoolCards}
         </List>
-      </ScrollView>
+        </Content>
+      </Container>
     );
   }
-
-  _maybeRenderDevelopmentModeWarning() {
-    if (__DEV__) {
-      const learnMoreButton = (
-        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-      );
-
-      return (
-        <Text style={styles.developmentModeText}>
-          Development mode is enabled, your app will be slower but you can use
-          useful development tools. {learnMoreButton}
-        </Text>
-      );
-    } else {
-      return (
-        <Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
-        </Text>
-      );
-    }
-  }
-
-  _handleLearnMorePress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/development-mode'
-    );
-  };
-
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-    );
-  };
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff'
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center'
-  },
-  navigationFilename: {
-    marginTop: 5
-  },
   activityIndicator: {
     flex: 1,
-    alignContent: 'center'
+    flexDirection: 'column',
+    justifyContent: 'center'
   }
 });
