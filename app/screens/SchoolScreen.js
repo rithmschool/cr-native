@@ -4,10 +4,12 @@ import {
   ScrollView,
   View,
   Text,
-  Button,
   StyleSheet,
   ActivityIndicator
 } from 'react-native';
+import { Button } from 'native-base';
+import ReviewCard from '../components/ReviewCard';
+import Stars from '../components/Stars';
 
 import axios from 'axios';
 
@@ -42,12 +44,11 @@ class SchoolScreen extends Component {
     }
 
     let reviews = this.state.school.reviews.map(review => (
-      <Text>{review.body}</Text>
+      <ReviewCard key={review.id} review={review} />
     ));
 
     return (
       <ScrollView style={styles.container}>
-        <Text style={styles.name}>{this.state.school.name}</Text>
         <View style={styles.imageParent}>
           <Image
             style={styles.image}
@@ -55,25 +56,25 @@ class SchoolScreen extends Component {
               uri: this.state.school.logo
             }}
           />
-          {this.state.school.avg_review_rating ? (
-            <Text>{this.state.school.avg_review_rating} stars</Text>
-          ) : (
-            <Text />
-          )}
+          <Text style={styles.name}>{this.state.school.name}</Text>
+          <Stars rating={this.state.school.avg_review_rating} size={20} />
+
           <Text>{this.state.school.review_count} reviews</Text>
         </View>
 
         <Text style={styles.about}>{this.state.school.about}</Text>
         <Button
+          full
+          style={styles.button}
           onPress={() =>
             this.props.navigation.navigate('Contact', {
               school: this.state.school
             })
           }
-          title="Contact"
-          color="#4F922F"
-          accessibilityLabel="Contact this school"
-        />
+        >
+          <Text style={styles.buttonText}>Contact</Text>
+        </Button>
+        <Text style={styles.reviewTitle}>Reviews</Text>
         {reviews}
       </ScrollView>
     );
@@ -92,8 +93,16 @@ const styles = StyleSheet.create({
   },
 
   name: {
+    textAlign: 'left',
+    fontWeight: 'bold',
     fontSize: 35,
-    textAlign: 'center'
+    paddingVertical: 15
+  },
+  reviewTitle: {
+    textAlign: 'left',
+    fontWeight: 'bold',
+    fontSize: 25,
+    paddingVertical: 15
   },
   image: {
     width: 100,
@@ -103,9 +112,19 @@ const styles = StyleSheet.create({
   imageParent: {
     alignItems: 'center'
   },
+  button: {
+    backgroundColor: '#4F922F',
+    marginBottom: 30
+  },
+  buttonText: {
+    fontWeight: 'bold',
+    color: 'white'
+  },
   about: {
-    margin: 10,
-    marginTop: 20
+    textAlign: 'left',
+    color: 'gray',
+    fontSize: 14,
+    paddingVertical: 35
   }
 });
 

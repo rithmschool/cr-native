@@ -1,27 +1,28 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, Image, StyleSheet, View, Text } from 'react-native';
-import { Container, Content, ListItem } from 'native-base';
-import { PROXY_URL } from '../config';
+import { StyleSheet, ActivityIndicator } from 'react-native';
+import { Container, Content, List } from 'native-base';
 import axios from 'axios';
+import { PROXY_URL } from '../config';
+import BlogCard from '../components/BlogCard';
 
 const loadResources = async () => {
-  try{
+  try {
     const url = PROXY_URL + '/blog';
     let response = await axios({
       url: url,
       method: 'get'
     });
     let data = await response.data;
-    return data.posts
+    return data.posts;
   } catch (error) {
-    console.log('Error:', error)
+    console.log('Error:', error);
   }
-}
+};
 
 export default class BlogScreen extends Component {
   state = {
     loading: true
-  }
+  };
 
   static navigationOptions = {
     title: 'Blog'
@@ -29,95 +30,69 @@ export default class BlogScreen extends Component {
 
   componentDidMount() {
     loadResources()
-    .then(res => {
-      this.setState({
-        loading: false,
-        posts: res
+      .then(res => {
+        this.setState({
+          loading: false,
+          posts: res
+        });
       })
-    }).catch(err => {
-      console.log('err', err)
-    })
+      .catch(err => {
+        console.log('err', err);
+      });
   }
 
   _handleButton = id => {
     this.props.navigation.navigate('Post', { id });
-  }
+  };
 
   render() {
-    if (this.state.loading) return <Text>Loading...</Text>
+    if (this.state.loading) {
+      return (
+        <ActivityIndicator
+          size="large"
+          color="#4F922F"
+          style={styles.activityIndicator}
+        />
+      );
+    }
     return (
-      <Container style={styles.container}>
+      <Container>
         <Content>
-          <View>
-          {this.state.posts.map(post => {
-            const date = new Date(post.created_at);
-            const formattedDate = date.toDateString();
-            return (
-            <ListItem key={post.id}>
-              <TouchableOpacity 
-                onPress={() => this._handleButton(post.id)} 
-                style={styles.cardContainer}>
-                <View>
-                  <Text style={styles.cardTitle}>{post.title}</Text>
-                  <Text style={styles.cardText}>
-                    <Text>By {post.author}</Text>
-                    <Text>  •  </Text>
-                    <Text>{formattedDate}</Text>
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              <View style={styles.imageContainer}>
-                <Image
-                  style={styles.image}
-                  source={{
-                    uri: "https://www.rithmschool.com/assets/logos/300logo-e647a12a86a37452242b8a21b69d9d1dc4062424c1aba75e17ca49ba66787120.jpg"
-                  }}
-                />
-              </View>
-            </ListItem>
-            )
-          })}
-          </View>
+          <List>
+            {this.state.posts.map(post => {
+              const date = new Date(post.created_at);
+              const formattedDate = date.toDateString();
+              return <BlogCard
+                key={post.id}
+                post={post}
+                navigate={() => this.props.navigation.navigate('Post', { id: post.id })}
+              />
+            })}
+          </List>
         </Content>
       </Container>
     );
   }
+
+  _loadResources = async () => {
+    try {
+      const url = PROXY_URL + '/blog';
+      let response = await axios({
+        url: url,
+        method: 'get'
+      });
+      let data = await response.data;
+      return data.posts
+    } catch (error) {
+      console.log('Error:', error)
+    }
+  }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff'
-  },
-  cardTitle: {
-    textAlign: 'left',
-    fontWeight: 'bold',
-    fontSize: 20,
-    paddingVertical: 5,
-  },
-  cardText: {
+  activityIndicator: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
-    color: 'gray',
-    textAlign: 'left',
-    fontSize: 12,
-    margin: 'auto'
-  },
-  cardBody: {
-    flex: 1,
-    flexDirection: 'column',
-    flexWrap: 'wrap',
-    width: '70%',
-    paddingLeft: 10
-  },
-  cardContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    height: 'auto',
-  },
-  image: {
-    margin: 20,
-    width: 70,
-    height: 70
+    justifyContent: 'center'
   }
 });
