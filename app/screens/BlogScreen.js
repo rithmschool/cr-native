@@ -62,11 +62,15 @@ export default class BlogScreen extends Component {
             {this.state.posts.map(post => {
               const date = new Date(post.created_at);
               const formattedDate = date.toDateString();
-              return <BlogCard
-                key={post.id}
-                post={post}
-                navigate={() => this.props.navigation.navigate('Post', { id: post.id })}
-              />
+              return (
+                <BlogCard
+                  key={post.id}
+                  post={post}
+                  navigate={() =>
+                    this.props.navigation.navigate('Post', { id: post.id })
+                  }
+                />
+              );
             })}
           </List>
         </Content>
@@ -82,11 +86,11 @@ export default class BlogScreen extends Component {
         method: 'get'
       });
       let data = await response.data;
-      return data.posts
+      return data.posts;
     } catch (error) {
-      console.log('Error:', error)
+      console.log('Error:', error);
     }
-  }
+  };
 }
 
 const styles = StyleSheet.create({

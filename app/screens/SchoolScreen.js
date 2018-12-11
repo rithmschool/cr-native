@@ -12,8 +12,7 @@ import ReviewCard from '../components/ReviewCard';
 import Stars from '../components/Stars';
 
 import axios from 'axios';
-
-const BASE_URL = 'http://192.168.1.227:3001';
+import { PROXY_URL } from '../config';
 
 class SchoolScreen extends Component {
   state = {
@@ -25,7 +24,7 @@ class SchoolScreen extends Component {
     try {
       let schoolId = this.props.navigation.getParam('id');
       //do the axios call to get the data for an individual school
-      let resp = await axios.get(`${BASE_URL}/schools/${schoolId}`);
+      let resp = await axios.get(`${PROXY_URL}/schools/${schoolId}`);
       this.setState({ school: resp.data.school, loading: false });
     } catch (err) {
       console.log(err);

@@ -4,7 +4,7 @@ import { Container, Content, List } from 'native-base';
 import axios from 'axios';
 import SchoolCard from '../components/SchoolCard';
 
-const BASE_URL = 'http://192.168.1.227:3001';
+import { PROXY_URL } from '../config';
 
 export default class SchoolsScreen extends React.Component {
   static navigationOptions = {
@@ -17,7 +17,7 @@ export default class SchoolsScreen extends React.Component {
   };
 
   async componentDidMount() {
-    let schoolsData = await axios.get(`${BASE_URL}/schools`, {
+    let schoolsData = await axios.get(`${PROXY_URL}/schools`, {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json'
@@ -36,7 +36,7 @@ export default class SchoolsScreen extends React.Component {
         />
       );
     }
-    let schoolCards = this.state.schools.slice(30, 50).map(school => {
+    let schoolCards = this.state.schools.map(school => {
       return (
         <SchoolCard
           school={school}
