@@ -5,30 +5,45 @@ import axios from 'axios';
 import { PROXY_URL } from '../config';
 import BlogCard from '../components/BlogCard';
 
+const loadResources = async () => {
+  try {
+    const url = PROXY_URL + '/blog';
+    let response = await axios({
+      url: url,
+      method: 'get'
+    });
+    let data = await response.data;
+    return data.posts;
+  } catch (error) {
+    console.log('Error:', error);
+  }
+};
+
 export default class BlogScreen extends Component {
   state = {
     loading: true
-  }
+  };
 
   static navigationOptions = {
     title: 'Blog'
   };
 
   componentDidMount() {
-    this._loadResources()
-    .then(res => {
-      this.setState({
-        loading: false,
-        posts: res
+    loadResources()
+      .then(res => {
+        this.setState({
+          loading: false,
+          posts: res
+        });
       })
-    }).catch(err => {
-      console.log('err', err)
-    })
+      .catch(err => {
+        console.log('err', err);
+      });
   }
 
   _handleButton = id => {
     this.props.navigation.navigate('Post', { id });
-  }
+  };
 
   render() {
     if (this.state.loading) {
@@ -44,15 +59,15 @@ export default class BlogScreen extends Component {
       <Container>
         <Content>
           <List>
-          {this.state.posts.map(post => {
-            const date = new Date(post.created_at);
-            const formattedDate = date.toDateString();
-            return <BlogCard 
-              key={post.id}
-              post={post} 
-              navigate={() => this.props.navigation.navigate('Post', {id: post.id})} 
-            />
-          })}
+            {this.state.posts.map(post => {
+              const date = new Date(post.created_at);
+              const formattedDate = date.toDateString();
+              return <BlogCard
+                key={post.id}
+                post={post}
+                navigate={() => this.props.navigation.navigate('Post', { id: post.id })}
+              />
+            })}
           </List>
         </Content>
       </Container>
@@ -60,7 +75,7 @@ export default class BlogScreen extends Component {
   }
 
   _loadResources = async () => {
-    try{
+    try {
       const url = PROXY_URL + '/blog';
       let response = await axios({
         url: url,

@@ -37,19 +37,23 @@ export default class SchoolsScreen extends React.Component {
       );
     }
     let schoolCards = this.state.schools.slice(0, 20).map(school => {
-      return <SchoolCard 
-        school={school} 
-        navigate={() => this.props.navigation.navigate('School', { id: school.id })}
-        key={school.id}
-      />
+      return (
+        <SchoolCard
+          school={school}
+          navigate={() =>
+            this.props.navigation.navigate('School', { id: school.id })
+          }
+          key={school.id}
+        />
+      );
     });
 
     return (
       <Container>
         <Content>
-        <List>
-        {schoolCards}
-        </List>
+          <List>
+            {schoolCards}
+          </List>
         </Content>
       </Container>
     );

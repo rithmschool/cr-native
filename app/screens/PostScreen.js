@@ -12,6 +12,7 @@ import { Container, Header, Content, H1, H2, H3 } from 'native-base';
 import axios from 'axios';
 import { PROXY_URL } from '../config';
 import Post from '../components/Post';
+import withOrientation from 'react-navigation/src/views/withOrientation';
 
 const HEADER_MAX_HEIGHT = 200;
 const HEADER_MIN_HEIGHT = 0;
@@ -132,6 +133,7 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     marginTop: HEADER_MAX_HEIGHT,
+    backgroundColor: 'white',
   },
   backgroundImage: {
     position: 'absolute',
