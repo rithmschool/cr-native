@@ -36,7 +36,7 @@ export default class SchoolsScreen extends React.Component {
         />
       );
     }
-    let schoolCards = this.state.schools.slice(0, 20).map(school => {
+    let schoolCards = this.state.schools.slice(40, 50).map(school => {
       return (
         <SchoolCard
           school={school}

@@ -1,11 +1,14 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
+import axios from 'axios'
+import { PROXY_URL } from '../config';
 import { Container, Header, Content, Picker, Form, Button, Text, Input, Item, Label, Textarea,Icon } from "native-base";
 
 export default class ContactScreen extends React.Component {
   constructor(props) {
     super(props);
     let school = props.navigation.getParam('school')
+    console.log(school.campuses)
     this.state = {
       message: '',
       phone: '',
@@ -16,8 +19,7 @@ export default class ContactScreen extends React.Component {
       school_id: school.id,
       contact: school.contact.name,
       contact_email: school.contact.email,
-      courseArr:'',
-      selected:''
+      courseArr:[]
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -45,28 +47,31 @@ export default class ContactScreen extends React.Component {
 
   handleCampus = (text) => {
     this.setState({campus_id:text});
-    this.setState({courseArr:text});
-    console.log(this.state)
+    this.setState({courseArr:this.props.navigation.getParam('school').campuses[text].courses});
   }
 
-  handleSubmit() {
-    console.warning(this.state);
+  handleCourse = (text) => {
+    this.setState({course_id:text})
+  }
+
+  async handleSubmit() {
+    const {'courseArr':[],...data}=this.state
+    let resp = await axios({
+      method:'post',
+      url:`${PROXY_URL}/contact`,
+      data
+    })
   }
 
   render() {
-    const campusItems = [<Picker.Item label="Wallet" value="key0" />,
-    <Picker.Item label="ATM Card" value="key1" />,
-    <Picker.Item label="Debit Card" value="key2" />,
-    <Picker.Item label="Credit Card" value="key3" />,
-    <Picker.Item label="Net Banking" value="key4" />]
 
-    // const campusEntries = Object.entries(this.props.navigation.getParam('school').campuses);
-    // console.log(this.props.navigation.getParam('school').campuses)
-    // const campusItems = campusEntries.map(campus => (
-    //   <Picker.Item key={campus[0]} label={campus[1].name} value={campus[0]} />
-    // ));
+    //Campus pickers
+    const campusEntries = Object.entries(this.props.navigation.getParam('school').campuses);
+    const campusItems = campusEntries.map(campus => (
+      <Picker.Item key={campus[0]} label={campus[1].name} value={campus[0]} />
+    ));
 
-    let coursePicker = 
+    let campusPicker = 
     <Picker
     mode="dropdown"
     iosIcon={<Icon name="ios-arrow-down-outline" />}
@@ -74,21 +79,30 @@ export default class ContactScreen extends React.Component {
     placeholderStyle={{ color: "#bfc6ea" }}
     placeholderIconColor="#007aff"
     style={{ width: undefined }}
-    selectedValue={this.state.selected}
+    selectedValue={this.state.campus_id}
     onValueChange={this.handleCampus}>
     {campusItems}
-  </Picker>
+    </Picker>
     
-    // (<Picker
-    //     selectedValue={this.state.campus_id}
-    //     style={styles.picker}
-    //     onValueChange={(itemValue, itemIndex) => {
-    //       this.setState({ campus_id: itemValue })
-    //       console.log(this.state);
-    //     }}
-    //   >
-    //     {campusItems}
-    //   </Picker>)
+    //Course pickers
+
+    const courseArr = this.state.courseArr;
+    const courseItems = courseArr.map(course => (
+      <Picker.Item key={course.id} label={course.name} value={course.id} />
+    ));
+
+    let coursePicker = 
+    <Picker
+    mode="dropdown"
+    iosIcon={<Icon name="ios-arrow-down-outline" />}
+    placeholder="Select your Course"
+    placeholderStyle={{ color: "#bfc6ea" }}
+    placeholderIconColor="#007aff"
+    style={{ width: undefined }}
+    selectedValue={this.state.course_id}
+    onValueChange={this.handleCourse}>
+    {courseItems}
+    </Picker>
 
     return (
       <Container>
@@ -112,9 +126,12 @@ export default class ContactScreen extends React.Component {
             <Input onChangeText={this.handleMessage} value={this.state.message}/>
           </Item>
           <Item>
+            {campusPicker}
+          </Item>
+          <Item>
             {coursePicker}
           </Item>
-          <Button full success>
+          <Button full success onPress={this.handleSubmit}>
             <Text>Submit</Text>
           </Button>
         </Form>
