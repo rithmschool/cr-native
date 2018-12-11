@@ -11,9 +11,10 @@ import {
 import { Container, Header, Content, H1, H2, H3 } from 'native-base';
 import axios from 'axios';
 import { PROXY_URL } from '../config';
+import Post from '../components/Post';
 
 const HEADER_MAX_HEIGHT = 200;
-const HEADER_MIN_HEIGHT = 60;
+const HEADER_MIN_HEIGHT = 0;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
 class PostScreen extends Component {
@@ -22,7 +23,7 @@ class PostScreen extends Component {
 
     this.state = {
       scrollY: new Animated.Value(0),
-      post: {},
+      post: null,
       loading: true
     };
   }
@@ -42,16 +43,16 @@ class PostScreen extends Component {
     this.setState({ post: postData.data.post, loading: false });
   }
 
-  _renderScrollViewContent() {
-    const data = Array.from({ length: 30 });
-    return (
-      <View style={styles.scrollViewContent}>
-        <View style={styles.postTitle}>
-          <H1>{this.state.post.title}</H1>
-        </View>
+  _renderScrollViewContent = () => {
 
-      </View>
-    );
+    if (this.state.post) {
+      post = { ...this.state.post };
+      return (
+        <View style={styles.scrollViewContent}>
+          <Post post={post} />
+        </View>
+      );
+    }
   }
 
   render() {
@@ -78,30 +79,31 @@ class PostScreen extends Component {
           style={styles.activityIndicator}
         />
       );
+    } else {
+      return (
+        <View style={styles.fill}>
+          <ScrollView
+            style={styles.fill}
+            scrollEventThrottle={16}
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { y: this.state.scrollY } } }]
+            )}
+          >
+            {this._renderScrollViewContent()}
+          </ScrollView>
+          <Animated.View style={[styles.header, { height: headerHeight }]}>
+            <Animated.Image
+              style={[
+                styles.backgroundImage,
+                { opacity: imageOpacity, transform: [{ translateY: imageTranslate }] },
+              ]}
+              // source={{ uri: this.state.post.header_url }}
+              source={require('../assets/images/cat.jpg')}
+            />
+          </Animated.View>
+        </View>
+      );
     }
-    return (
-      <View style={styles.fill}>
-        <ScrollView
-          style={styles.fill}
-          scrollEventThrottle={16}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { y: this.state.scrollY } } }]
-          )}
-        >
-          {this._renderScrollViewContent()}
-        </ScrollView>
-        <Animated.View style={[styles.header, { height: headerHeight }]}>
-          <Animated.Image
-            style={[
-              styles.backgroundImage,
-              { opacity: imageOpacity, transform: [{ translateY: imageTranslate }] },
-            ]}
-            // source={{ uri: this.state.post.header_url }}
-            source={require('../assets/images/cat.jpg')}
-          />
-        </Animated.View>
-      </View>
-    );
   }
 }
 
@@ -114,7 +116,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#03A9F4',
+    backgroundColor: 'white',
     overflow: 'hidden',
   },
   bar: {
@@ -128,11 +130,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
-  postTitle: {
-    flex: 1,
-    flexDirection: 'row',
-
-  }
   scrollViewContent: {
     marginTop: HEADER_MAX_HEIGHT,
   },
