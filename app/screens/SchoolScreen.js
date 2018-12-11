@@ -7,9 +7,9 @@ import {
   StyleSheet,
   ActivityIndicator
 } from 'react-native';
-import ReviewCard from '../components/ReviewCard';
 import { Button } from 'native-base';
-import uuid from 'uuid/v4';
+import ReviewCard from '../components/ReviewCard';
+import Stars from '../components/Stars';
 
 import axios from 'axios';
 
@@ -44,7 +44,7 @@ class SchoolScreen extends Component {
     }
 
     let reviews = this.state.school.reviews.map(review => (
-      <ReviewCard key={uuid()} review={review} />
+      <ReviewCard key={review.id} review={review} />
     ));
 
     return (
@@ -57,12 +57,8 @@ class SchoolScreen extends Component {
             }}
           />
           <Text style={styles.name}>{this.state.school.name}</Text>
+          <Stars rating={this.state.school.avg_review_rating} size={20} />
 
-          {this.state.school.avg_review_rating ? (
-            <Text>{this.state.school.avg_review_rating} stars</Text>
-          ) : (
-            <Text />
-          )}
           <Text>{this.state.school.review_count} reviews</Text>
         </View>
 

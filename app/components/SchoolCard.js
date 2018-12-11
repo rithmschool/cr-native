@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, Image, View } from 'react-native';
 import { ListItem } from 'native-base';
+import Stars from '../components/Stars';
 
 const MAX_LOCATION_CHARS = 48; // max number of characters displayed for locations list
 
@@ -29,14 +30,7 @@ class SchoolCard extends React.Component {
               <Text style={styles.cardTitle}>{this.props.school.name}</Text>
             </View>
             <View style={styles.row}>
-              <Text style={styles.cardText}>
-                <Text style={styles.cardTextLabel}>
-                  Average Review Rating:{' '}
-                </Text>
-                {this.props.school.avg_review_rating
-                  ? this.props.school.avg_review_rating
-                  : 'Not Available'}
-              </Text>
+              <Stars rating={this.props.school.avg_review_rating} size={20} />
             </View>
             <View style={styles.row}>
               <Text style={styles.cardText}>
@@ -74,12 +68,6 @@ const styles = StyleSheet.create({
   cardTextLabel: {
     color: 'black',
     textAlign: 'left',
-    paddingVertical: 5
-  },
-  cardText: {
-    textAlign: 'left',
-    color: 'gray',
-    fontSize: 12,
     paddingVertical: 5
   },
   cardBody: {
