@@ -47,6 +47,8 @@ class SchoolScreen extends Component {
       <ReviewCard key={review.id} review={review} />
     ));
 
+    console.log('this.state.school', this.state.school);
+
     return (
       <ScrollView style={styles.container}>
         <View style={styles.imageParent}>
@@ -63,17 +65,22 @@ class SchoolScreen extends Component {
         </View>
 
         <Text style={styles.about}>{this.state.school.about}</Text>
-        <Button
-          full
-          style={styles.button}
-          onPress={() =>
-            this.props.navigation.navigate('Contact', {
-              school: this.state.school
-            })
-          }
-        >
-          <Text style={styles.buttonText}>Contact</Text>
-        </Button>
+        {this.state.school.contact ? (
+          <Button
+            full
+            style={styles.button}
+            onPress={() =>
+              this.props.navigation.navigate('Contact', {
+                school: this.state.school
+              })
+            }
+          >
+            <Text style={styles.buttonText}>Contact</Text>
+          </Button>
+        ) : (
+          <Text />
+        )}
+
         <Text style={styles.reviewTitle}>Reviews</Text>
         {reviews}
       </ScrollView>

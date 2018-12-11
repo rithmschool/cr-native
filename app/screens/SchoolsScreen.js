@@ -36,7 +36,7 @@ export default class SchoolsScreen extends React.Component {
         />
       );
     }
-    let schoolCards = this.state.schools.slice(0, 20).map(school => {
+    let schoolCards = this.state.schools.slice(30, 50).map(school => {
       return (
         <SchoolCard
           school={school}
@@ -51,9 +51,7 @@ export default class SchoolsScreen extends React.Component {
     return (
       <Container>
         <Content>
-          <List>
-            {schoolCards}
-          </List>
+          <List>{schoolCards}</List>
         </Content>
       </Container>
     );
