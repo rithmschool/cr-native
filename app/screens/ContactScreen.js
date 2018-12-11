@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import axios from 'axios'
 import { PROXY_URL } from '../config';
 import { Container, Header, Content, Picker, Form, Button, Text, Input, Item, Label, Textarea,Icon } from "native-base";
+import {StackActions} from 'react-navigation'
 
 export default class ContactScreen extends React.Component {
   constructor(props) {
@@ -61,6 +62,9 @@ export default class ContactScreen extends React.Component {
       url:`${PROXY_URL}/contact`,
       data
     })
+    const popAction = StackActions.pop({n:1})
+    this.props.navigation.dispatch(popAction)
+
   }
 
   render() {
