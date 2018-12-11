@@ -14,15 +14,16 @@ class ReviewCard extends React.Component {
         <Text style={styles.reviewRow}>Overall Experience:</Text>
         <Stars rating={this.props.review.overall_experience_rating} size={20} />
 
-        <Text style={styles.reviewRow}>
-          Curriculum: {this.props.review.course_curriculum_rating}
-        </Text>
-        <Text style={styles.reviewRow}>
-          Instructors: {this.props.review.course_instructors_rating}
-        </Text>
-        <Text style={styles.reviewRow}>
-          Job Assistance: {this.props.review.school_job_assistance_rating}
-        </Text>
+        <Text style={styles.reviewRow}>Curriculum:</Text>
+        <Stars rating={this.props.review.course_curriculum_rating} size={20} />
+        <Text style={styles.reviewRow}>Instructors:</Text>
+        <Stars rating={this.props.review.course_instructors_rating} size={20} />
+        <Text style={styles.reviewRow}>Job Assistance:</Text>
+        <Stars
+          rating={this.props.review.school_job_assistance_rating}
+          size={20}
+        />
+
         <Text style={styles.reviewBody}>{this.props.review.body}</Text>
       </View>
     );
