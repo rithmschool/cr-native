@@ -34,7 +34,6 @@ SchoolsStack.navigationOptions = {
 const BlogStack = createStackNavigator({
   Blog: BlogScreen,
   Post: PostScreen
-
 });
 
 BlogStack.navigationOptions = {

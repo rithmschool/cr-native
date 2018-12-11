@@ -1,9 +1,9 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
+import Stars from '../components/Stars';
 
 class ReviewCard extends React.Component {
   render() {
-    console.log(this.props);
     let date = new Date(this.props.review.created_at);
     return (
       <View>
@@ -11,9 +11,9 @@ class ReviewCard extends React.Component {
           {this.props.review.reviewer_name}
         </Text>
         <Text style={styles.reviewRow}>{date.toLocaleDateString()}</Text>
-        <Text style={styles.reviewRow}>
-          Overall Experience: {this.props.review.overall_experience_rating}
-        </Text>
+        <Text style={styles.reviewRow}>Overall Experience:</Text>
+        <Stars rating={this.props.review.overall_experience_rating} size={20} />
+
         <Text style={styles.reviewRow}>
           Curriculum: {this.props.review.course_curriculum_rating}
         </Text>

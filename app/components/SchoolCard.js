@@ -18,7 +18,6 @@ class SchoolCard extends React.Component {
 
   render() {
     let locations = formatCities(this.props.school.cities);
-    console.log(this.props);
     return (
       <ListItem style={styles.cardContainer}>
         <TouchableOpacity

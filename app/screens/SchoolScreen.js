@@ -69,15 +69,15 @@ class SchoolScreen extends Component {
         <Text style={styles.about}>{this.state.school.about}</Text>
         <Button
           full
+          style={styles.button}
           onPress={() =>
             this.props.navigation.navigate('Contact', {
               school: this.state.school
             })
           }
-          title="Contact"
-          color="#4F922F"
-          accessibilityLabel="Contact this school"
-        />
+        >
+          <Text style={styles.buttonText}>Contact</Text>
+        </Button>
         <Text style={styles.reviewTitle}>Reviews</Text>
         {reviews}
       </ScrollView>
@@ -115,6 +115,14 @@ const styles = StyleSheet.create({
   },
   imageParent: {
     alignItems: 'center'
+  },
+  button: {
+    backgroundColor: '#4F922F',
+    marginBottom: 30
+  },
+  buttonText: {
+    fontWeight: 'bold',
+    color: 'white'
   },
   about: {
     textAlign: 'left',
