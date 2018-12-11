@@ -61,45 +61,4 @@ class SchoolCard extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
-  row: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  cardTitle: {
-    textAlign: 'left',
-    fontWeight: 'bold',
-    fontSize: 20,
-    paddingVertical: 5
-  },
-  cardTextLabel: {
-    color: 'black',
-    textAlign: 'left',
-    paddingVertical: 5
-  },
-  cardText: {
-    textAlign: 'left',
-    color: 'gray',
-    fontSize: 12,
-    paddingVertical: 5
-  },
-  cardBody: {
-    flex: 1,
-    flexDirection: 'column',
-    flexWrap: 'wrap',
-    width: '70%',
-    paddingLeft: 10
-  },
-  cardContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    height: 'auto'
-  },
-  image: {
-    margin: 20,
-    width: 70,
-    height: 70
-  }
-});
-
 export default SchoolCard;
