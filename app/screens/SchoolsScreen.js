@@ -43,22 +43,24 @@ export default class SchoolsScreen extends React.Component {
       );
     }
     let schoolCards = this.state.schools.map(school => {
-      return (
-        <SchoolCard
-          school={school}
-          navigate={() =>
-            this.props.navigation.navigate('School', { id: school.id })
-          }
-          key={school.id}
-        />
-      );
+      if (school.name.includes(this.state.search)) {
+        return (
+          <SchoolCard
+            school={school}
+            navigate={() =>
+              this.props.navigation.navigate('School', { id: school.id })
+            }
+            key={school.id}
+          />
+        );
+      }
     });
 
     return (
       <Container>
         <TextInput
           lable="Search"
-          placeholder="Search"
+          placeholder="Search by school name"
           value={this.state.search}
           onChangeText={search => this.setState({ search })}
           style={styles.search}

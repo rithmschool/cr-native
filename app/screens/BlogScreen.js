@@ -1,21 +1,23 @@
-import React, {Component} from 'react';
-import {StyleSheet, ActivityIndicator} from 'react-native';
-import {Container, Content, List} from 'native-base';
+import React, { Component } from 'react';
+import { StyleSheet, ActivityIndicator, TextInput } from 'react-native';
+import { Container, Content, List } from 'native-base';
 import axios from 'axios';
 axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
-import {PROXY_URL} from '../config';
+import { PROXY_URL } from '../config';
 import BlogCard from '../components/BlogCard';
 
 export default class BlogScreen extends Component {
   state = {
     loading: true,
     page: 1,
+    posts: [],
+    search: ''
   };
 
   static navigationOptions = {
-    title: 'Blog',
+    title: 'Blog'
   };
 
   componentDidMount() {
@@ -23,7 +25,7 @@ export default class BlogScreen extends Component {
       .then(res => {
         this.setState({
           loading: false,
-          posts: res,
+          posts: res
         });
       })
       .catch(err => {
@@ -31,10 +33,10 @@ export default class BlogScreen extends Component {
       });
   }
 
-  loadResources = async(pageNum) => {
+  loadResources = async pageNum => {
     try {
       const url = `${PROXY_URL}/blog`;
-      let response = await axios.get(url, {params: {page: pageNum}});
+      let response = await axios.get(url, { params: { page: pageNum } });
       let data = response.data;
       return data.posts;
     } catch (error) {
@@ -48,12 +50,12 @@ export default class BlogScreen extends Component {
 
       const updatedPosts = [...this.state.posts, ...newPosts];
       this.setState({
-        posts: updatedPosts,
+        posts: updatedPosts
       });
     }
   }
 
-  isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+  isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
     const paddingToBottom = 20;
     return (
       layoutMeasurement.height + contentOffset.y >=
@@ -65,13 +67,13 @@ export default class BlogScreen extends Component {
     if (this.isCloseToBottom(evt.nativeEvent)) {
       let nextPage = this.state.page + 1;
       this.setState({
-        page: nextPage,
+        page: nextPage
       });
     }
   };
 
   _handleButton = id => {
-    this.props.navigation.navigate('Post', {id});
+    this.props.navigation.navigate('Post', { id });
   };
 
   render() {
@@ -86,20 +88,31 @@ export default class BlogScreen extends Component {
     }
     return (
       <Container>
+        <TextInput
+          lable="Search"
+          placeholder="Search by title or topic"
+          value={this.state.search}
+          onChangeText={search => this.setState({ search })}
+          style={styles.search}
+        />
+
         <Content onScroll={this.handleScroll}>
           <List>
             {this.state.posts.map(post => {
-              const date = new Date(post.created_at);
-              const formattedDate = date.toDateString();
-              return (
-                <BlogCard
-                  key={post.id}
-                  post={post}
-                  navigate={() =>
-                    this.props.navigation.navigate('Post', {id: post.id})
-                  }
-                />
-              );
+              console.log(post.title);
+              if (post.title.includes(this.state.search)) {
+                const date = new Date(post.created_at);
+                const formattedDate = date.toDateString();
+                return (
+                  <BlogCard
+                    key={post.id}
+                    post={post}
+                    navigate={() =>
+                      this.props.navigation.navigate('Post', { id: post.id })
+                    }
+                  />
+                );
+              }
             })}
           </List>
         </Content>
@@ -112,7 +125,7 @@ export default class BlogScreen extends Component {
       const url = PROXY_URL + '/blog';
       let response = await axios({
         url: url,
-        method: 'get',
+        method: 'get'
       });
       let data = await response.data;
       return data.posts;
@@ -126,6 +139,13 @@ const styles = StyleSheet.create({
   activityIndicator: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
+  search: {
+    flex: 0,
+    flexDirection: 'column',
+    padding: 25,
+    fontWeight: 'bold',
+    fontSize: 20
+  }
 });
