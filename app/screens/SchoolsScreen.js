@@ -1,5 +1,10 @@
 import React from 'react';
-import { ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  ActivityIndicator,
+  TextInput
+} from 'react-native';
 import { Container, Content, List } from 'native-base';
 import axios from 'axios';
 import SchoolCard from '../components/SchoolCard';
@@ -13,11 +18,12 @@ export default class SchoolsScreen extends React.Component {
 
   state = {
     schools: [],
-    loading: true
+    loading: true,
+    search: ''
   };
 
   async componentDidMount() {
-    let schoolsData = await axios.get(`${PROXY_URL}/schools`, {
+    let schoolsData = await axios.get(`${PROXY_URL}/schools?page=2`, {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json'
@@ -50,6 +56,13 @@ export default class SchoolsScreen extends React.Component {
 
     return (
       <Container>
+        <TextInput
+          lable="Search"
+          placeholder="Search"
+          value={this.state.search}
+          onChangeText={search => this.setState({ search })}
+        />
+
         <Content>
           <List>{schoolCards}</List>
         </Content>

@@ -58,20 +58,20 @@ export default class LinksScreen extends React.Component {
     ));
 
     let coursePicker;
-    if(Platform.OS === 'android') {
-      coursePicker = (<Picker
-        selectedValue={this.state.language}
-        style={styles.picker}
-        onValueChange={(itemValue, itemIndex) =>
-          this.setState({ course_id: itemValue })
-        }
-      >
-        {campusItems}
-      </Picker>)
+    if (Platform.OS === 'android') {
+      coursePicker = (
+        <Picker
+          selectedValue={this.state.language}
+          style={styles.picker}
+          onValueChange={(itemValue, itemIndex) =>
+            this.setState({ course_id: itemValue })
+          }
+        >
+          {campusItems}
+        </Picker>
+      );
     } else {
-      coursePicker = (<Text>
-        Here!!
-        </Text>)
+      coursePicker = <Text>Here!!</Text>;
     }
 
     return (
@@ -105,7 +105,7 @@ export default class LinksScreen extends React.Component {
           onChangeText={message => this.setState({ message })}
         />
         <Text>Campus</Text>
-       {coursePicker}
+        {coursePicker}
 
         {/* <Picker
           selectedValue={this.state.language}
