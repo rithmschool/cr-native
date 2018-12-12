@@ -1,39 +1,29 @@
-import React, { Component } from 'react';
-import { StyleSheet, ActivityIndicator } from 'react-native';
-import { Container, Content, List } from 'native-base';
+import React, {Component} from 'react';
+import {StyleSheet, ActivityIndicator} from 'react-native';
+import {Container, Content, List} from 'native-base';
 import axios from 'axios';
-import { PROXY_URL } from '../config';
-import BlogCard from '../components/BlogCard';
+axios.defaults.headers.common['Accept'] = 'application/json';
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
-const loadResources = async () => {
-  try {
-    const url = PROXY_URL + '/blog';
-    let response = await axios({
-      url: url,
-      method: 'get'
-    });
-    let data = await response.data;
-    return data.posts;
-  } catch (error) {
-    console.log('Error:', error);
-  }
-};
+import {PROXY_URL} from '../config';
+import BlogCard from '../components/BlogCard';
 
 export default class BlogScreen extends Component {
   state = {
-    loading: true
+    loading: true,
+    page: 1,
   };
 
   static navigationOptions = {
-    title: 'Blog'
+    title: 'Blog',
   };
 
   componentDidMount() {
-    loadResources()
+    this.loadResources(1)
       .then(res => {
         this.setState({
           loading: false,
-          posts: res
+          posts: res,
         });
       })
       .catch(err => {
@@ -41,8 +31,50 @@ export default class BlogScreen extends Component {
       });
   }
 
+  loadResources = async(pageNum) => {
+    try {
+      const url = `${PROXY_URL}/blog`;
+      let response = await axios.get(url, {params: {page: pageNum}});
+      let data = response.data;
+      return data.posts;
+    } catch (error) {
+      console.log('Error:', error);
+    }
+  };
+
+  async componentDidUpdate(prevProps, prevState) {
+    if (prevState.page !== this.state.page) {
+      let newPosts = await this.loadResources(this.state.page);
+
+      const updatedPosts = [...this.state.posts, ...newPosts];
+      this.setState({
+        posts: updatedPosts,
+      });
+    }
+  }
+
+  isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 20;
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
+
+  handleScroll = evt => {
+    if (this.isCloseToBottom(evt.nativeEvent)) {
+      console.log('got to bottom!');
+      let nextPage = this.state.page + 1;
+
+      console.log('your next page will be', nextPage);
+      this.setState({
+        page: nextPage,
+      });
+    }
+  };
+
   _handleButton = id => {
-    this.props.navigation.navigate('Post', { id });
+    this.props.navigation.navigate('Post', {id});
   };
 
   render() {
@@ -57,7 +89,7 @@ export default class BlogScreen extends Component {
     }
     return (
       <Container>
-        <Content>
+        <Content onScroll={this.handleScroll}>
           <List>
             {this.state.posts.map(post => {
               const date = new Date(post.created_at);
@@ -67,7 +99,7 @@ export default class BlogScreen extends Component {
                   key={post.id}
                   post={post}
                   navigate={() =>
-                    this.props.navigation.navigate('Post', { id: post.id })
+                    this.props.navigation.navigate('Post', {id: post.id})
                   }
                 />
               );
@@ -83,7 +115,7 @@ export default class BlogScreen extends Component {
       const url = PROXY_URL + '/blog';
       let response = await axios({
         url: url,
-        method: 'get'
+        method: 'get',
       });
       let data = await response.data;
       return data.posts;
@@ -97,6 +129,6 @@ const styles = StyleSheet.create({
   activityIndicator: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
