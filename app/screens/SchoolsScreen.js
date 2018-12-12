@@ -61,6 +61,7 @@ export default class SchoolsScreen extends React.Component {
           placeholder="Search"
           value={this.state.search}
           onChangeText={search => this.setState({ search })}
+          style={styles.search}
         />
 
         <Content>
@@ -76,5 +77,12 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center'
+  },
+  search: {
+    flex: 0,
+    flexDirection: 'column',
+    padding: 25,
+    fontWeight: 'bold',
+    fontSize: 20
   }
 });

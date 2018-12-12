@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export default styles = StyleSheet.create({
+export default (styles = StyleSheet.create({
   activityIndicator: {
     flex: 1,
     flexDirection: 'column',
@@ -14,7 +14,7 @@ export default styles = StyleSheet.create({
     textAlign: 'left',
     fontWeight: 'bold',
     fontSize: 20,
-    paddingVertical: 5,
+    paddingVertical: 5
   },
   cardText: {
     flex: 1,
@@ -35,11 +35,11 @@ export default styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     flexDirection: 'row',
-    height: 'auto',
+    height: 'auto'
   },
   image: {
     margin: 20,
     width: 70,
     height: 70
   }
-});
+}));
