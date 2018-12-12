@@ -63,10 +63,7 @@ export default class BlogScreen extends Component {
 
   handleScroll = evt => {
     if (this.isCloseToBottom(evt.nativeEvent)) {
-      console.log('got to bottom!');
       let nextPage = this.state.page + 1;
-
-      console.log('your next page will be', nextPage);
       this.setState({
         page: nextPage,
       });
