@@ -13,18 +13,53 @@ export default class SchoolsScreen extends React.Component {
 
   state = {
     schools: [],
-    loading: true
+    loading: true,
+    page: 1
+  };
+
+  loadResources = async(page) => {
+    try {
+      const url = `${PROXY_URL}/schools`;
+      let response = await axios.get(url, {params: {page}});
+      let data = response.data;
+      return data.schools;
+    } catch (error) {
+      console.log('Error:', error);
+    }
   };
 
   async componentDidMount() {
-    let schoolsData = await axios.get(`${PROXY_URL}/schools`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
-      }
-    });
-    this.setState({ schools: schoolsData.data.schools, loading: false });
+    let schools = await this.loadResources(this.state.page);
+    this.setState({ schools, loading: false });
   }
+
+  async componentDidUpdate(prevProps, prevState) {
+    if (prevState.page !== this.state.page) {
+      let newSchools = await this.loadResources(this.state.page);
+
+      const updatedSchools = [...this.state.schools, ...newSchools];
+      this.setState({
+        schools: updatedSchools,
+      });
+    }
+  }
+
+  isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 20;
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
+
+  handleScroll = evt => {
+    if (this.isCloseToBottom(evt.nativeEvent)) {
+      let nextPage = this.state.page + 1;
+      this.setState({
+        page: nextPage,
+      });
+    }
+  };
 
   render() {
     if (this.state.loading) {
@@ -50,7 +85,7 @@ export default class SchoolsScreen extends React.Component {
 
     return (
       <Container>
-        <Content>
+        <Content onScroll={this.handleScroll}>
           <List>{schoolCards}</List>
         </Content>
       </Container>
