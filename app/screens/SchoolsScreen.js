@@ -1,5 +1,10 @@
 import React from 'react';
-import { ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  ActivityIndicator,
+  TextInput
+} from 'react-native';
 import { Container, Content, List } from 'native-base';
 import axios from 'axios';
 import SchoolCard from '../components/SchoolCard';
@@ -8,16 +13,24 @@ import { PROXY_URL } from '../config';
 
 export default class SchoolsScreen extends React.Component {
   static navigationOptions = {
-    title: 'Schools'
+    title: 'Schools',
+    headerStyle: {
+      backgroundColor: '#4F922F'
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold'
+    }
   };
 
   state = {
     schools: [],
     loading: true,
-    page: 1
+    page: 1,
+    search: ''
   };
 
-  loadResources = async (page) => {
+  loadResources = async page => {
     try {
       const url = `${PROXY_URL}/schools`;
       let response = await axios.get(url, { params: { page } });
@@ -39,7 +52,7 @@ export default class SchoolsScreen extends React.Component {
 
       const updatedSchools = [...this.state.schools, ...newSchools];
       this.setState({
-        schools: updatedSchools,
+        schools: updatedSchools
       });
     }
   }
@@ -56,7 +69,7 @@ export default class SchoolsScreen extends React.Component {
     if (this.isCloseToBottom(evt.nativeEvent)) {
       let nextPage = this.state.page + 1;
       this.setState({
-        page: nextPage,
+        page: nextPage
       });
     }
   };
@@ -72,19 +85,29 @@ export default class SchoolsScreen extends React.Component {
       );
     }
     let schoolCards = this.state.schools.map(school => {
-      return (
-        <SchoolCard
-          school={school}
-          navigate={() =>
-            this.props.navigation.navigate('School', { id: school.id })
-          }
-          key={school.id}
-        />
-      );
+      if (school.name.includes(this.state.search)) {
+        return (
+          <SchoolCard
+            school={school}
+            navigate={() =>
+              this.props.navigation.navigate('School', { id: school.id })
+            }
+            key={school.id}
+          />
+        );
+      }
     });
 
     return (
       <Container>
+        <TextInput
+          lable="Search"
+          placeholder="Search by school name"
+          value={this.state.search}
+          onChangeText={search => this.setState({ search })}
+          style={styles.search}
+        />
+
         <Content onScroll={this.handleScroll}>
           <List>{schoolCards}</List>
         </Content>
@@ -98,5 +121,12 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center'
+  },
+  search: {
+    flex: 0,
+    flexDirection: 'column',
+    padding: 25,
+    fontWeight: 'bold',
+    fontSize: 20
   }
 });

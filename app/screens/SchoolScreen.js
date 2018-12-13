@@ -20,6 +20,16 @@ class SchoolScreen extends Component {
     loading: true
   };
 
+  static navigationOptions = ({ navigation }) => ({
+    headerStyle: {
+      backgroundColor: '#4F922F'
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold'
+    }
+  });
+
   async componentDidMount() {
     try {
       let schoolId = this.props.navigation.getParam('id');
@@ -78,7 +88,9 @@ class SchoolScreen extends Component {
           <Text />
         )}
 
-        <Text style={styles.reviewTitle}>Reviews</Text>
+        <Text style={styles.reviewTitle}>
+          {this.state.school.review_count > 0 ? 'Reviews' : ''}
+        </Text>
         {reviews}
       </ScrollView>
     );
@@ -100,7 +112,8 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontWeight: 'bold',
     fontSize: 35,
-    paddingVertical: 15
+    paddingVertical: 15,
+    textAlign: 'center'
   },
   reviewTitle: {
     textAlign: 'left',

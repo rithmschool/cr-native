@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Text,
   View,
-  ActivityIndicator,
+  ActivityIndicator
 } from 'react-native';
 import { Container, Header, Content, H1, H2, H3 } from 'native-base';
 import axios from 'axios';
@@ -29,9 +29,16 @@ class PostScreen extends Component {
     };
   }
 
-  static navigationOptions = {
-    title: 'Post'
-  };
+  static navigationOptions = ({ navigation }) => ({
+    title: navigation.getParam('title'),
+    headerStyle: {
+      backgroundColor: '#4F922F'
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold'
+    }
+  });
 
   async componentDidMount() {
     let postId = this.props.navigation.getParam('id');
@@ -45,7 +52,6 @@ class PostScreen extends Component {
   }
 
   _renderScrollViewContent = () => {
-
     if (this.state.post) {
       post = { ...this.state.post };
       return (
@@ -54,23 +60,23 @@ class PostScreen extends Component {
         </View>
       );
     }
-  }
+  };
 
   render() {
     const headerHeight = this.state.scrollY.interpolate({
       inputRange: [0, HEADER_SCROLL_DISTANCE],
       outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
-      extrapolate: 'clamp',
+      extrapolate: 'clamp'
     });
     const imageOpacity = this.state.scrollY.interpolate({
       inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
       outputRange: [1, 1, 0],
-      extrapolate: 'clamp',
+      extrapolate: 'clamp'
     });
     const imageTranslate = this.state.scrollY.interpolate({
       inputRange: [0, HEADER_SCROLL_DISTANCE],
       outputRange: [0, -50],
-      extrapolate: 'clamp',
+      extrapolate: 'clamp'
     });
     if (this.state.loading) {
       return (
@@ -86,9 +92,9 @@ class PostScreen extends Component {
           <ScrollView
             style={styles.fill}
             scrollEventThrottle={16}
-            onScroll={Animated.event(
-              [{ nativeEvent: { contentOffset: { y: this.state.scrollY } } }]
-            )}
+            onScroll={Animated.event([
+              { nativeEvent: { contentOffset: { y: this.state.scrollY } } }
+            ])}
           >
             {this._renderScrollViewContent()}
           </ScrollView>
@@ -96,10 +102,12 @@ class PostScreen extends Component {
             <Animated.Image
               style={[
                 styles.backgroundImage,
-                { opacity: imageOpacity, transform: [{ translateY: imageTranslate }] },
+                {
+                  opacity: imageOpacity,
+                  transform: [{ translateY: imageTranslate }]
+                }
               ]}
-              // source={{ uri: this.state.post.header_url }}
-              source={require('../assets/images/cat.jpg')}
+              source={{ uri: this.state.post.header_url }}
             />
           </Animated.View>
         </View>
@@ -110,7 +118,7 @@ class PostScreen extends Component {
 
 const styles = StyleSheet.create({
   fill: {
-    flex: 1,
+    flex: 1
   },
   header: {
     position: 'absolute',
@@ -118,22 +126,22 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: 'white',
-    overflow: 'hidden',
+    overflow: 'hidden'
   },
   bar: {
     marginTop: 28,
     height: 32,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   title: {
     backgroundColor: 'transparent',
     color: 'white',
-    fontSize: 18,
+    fontSize: 18
   },
   scrollViewContent: {
     marginTop: HEADER_MAX_HEIGHT,
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   backgroundImage: {
     position: 'absolute',
@@ -142,8 +150,8 @@ const styles = StyleSheet.create({
     right: 0,
     width: null,
     height: HEADER_MAX_HEIGHT,
-    resizeMode: 'cover',
-  },
+    resizeMode: 'cover'
+  }
 });
 
 export default PostScreen;

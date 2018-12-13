@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ActivityIndicator,Image } from 'react-native';
+import { StyleSheet, ActivityIndicator, Image } from 'react-native';
 import { Container, Content } from 'native-base';
 import axios from 'axios';
 import BannerCard from '../components/BannerCard';
@@ -8,7 +8,14 @@ import { PROXY_URL } from '../config';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: 'Home'
+    title: 'Featured Schools',
+    headerStyle: {
+      backgroundColor: '#4F922F'
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold'
+    }
   };
 
   state = {
@@ -23,7 +30,10 @@ export default class HomeScreen extends React.Component {
         Accept: 'application/json'
       }
     });
-    this.setState({ featuredSchools: featuredSchoolsData.data.schools, loading: false });
+    this.setState({
+      featuredSchools: featuredSchoolsData.data.schools,
+      loading: false
+    });
   }
 
   render() {
@@ -40,9 +50,10 @@ export default class HomeScreen extends React.Component {
     return (
       <Container>
         <Content>
-          {/*banner card features can be added later*/}
-          {/* <BannerCard></BannerCard> */}
-          <FeaturedSchools featuredSchools={this.state.featuredSchools} navigation={this.props.navigation}></FeaturedSchools>
+          <FeaturedSchools
+            featuredSchools={this.state.featuredSchools}
+            navigation={this.props.navigation}
+          />
         </Content>
       </Container>
     );
