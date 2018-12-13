@@ -124,7 +124,6 @@ export default class BlogScreen extends Component {
                 );
               }
             })}
-            ;
           </List>
         </Content>
       </Container>
