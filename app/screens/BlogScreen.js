@@ -23,7 +23,9 @@ export default class BlogScreen extends Component {
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      fontFamily: 'share-tech',
+      fontSize: 25
     }
   };
 

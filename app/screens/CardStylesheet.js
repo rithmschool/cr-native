@@ -13,8 +13,9 @@ export default (styles = StyleSheet.create({
   cardTitle: {
     textAlign: 'left',
     fontWeight: 'bold',
-    fontSize: 20,
-    paddingVertical: 5
+    fontSize: 25,
+    paddingVertical: 5,
+    fontFamily: 'share-tech'
   },
   cardText: {
     flex: 1,
