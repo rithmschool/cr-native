@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { StyleSheet, ActivityIndicator, TextInput } from 'react-native';
 import { Container, Content, List } from 'native-base';
 import axios from 'axios';
+import { debounce } from 'underscore';
+
 axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
@@ -83,6 +85,19 @@ export default class BlogScreen extends Component {
     this.props.navigation.navigate('Post', { id });
   };
 
+  requestNewPosts(search) {}
+
+  handleChange(search) {
+    // Update the search input with what they typed
+    this.setState({ search });
+
+    //debounce a request for what to update for this.state
+    let requestNewPosts = () => {
+      this.requestNewPosts(search);
+    };
+    debounce(requestNewPosts, 1000)();
+  }
+
   render() {
     if (this.state.loading) {
       return (
@@ -99,14 +114,13 @@ export default class BlogScreen extends Component {
           lable="Search"
           placeholder="Search by title or topic"
           value={this.state.search}
-          onChangeText={search => this.setState({ search })}
+          onChangeText={search => this.handleChange(search)}
           style={styles.search}
         />
 
         <Content onScroll={this.handleScroll}>
           <List>
             {this.state.posts.map(post => {
-              console.log(post.title);
               if (post.title.includes(this.state.search)) {
                 const date = new Date(post.created_at);
                 const formattedDate = date.toDateString();

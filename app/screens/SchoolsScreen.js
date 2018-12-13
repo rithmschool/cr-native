@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { Container, Content, List } from 'native-base';
 import axios from 'axios';
+import debounce from 'lodash/debounce';
 import SchoolCard from '../components/SchoolCard';
 
 import { PROXY_URL } from '../config';

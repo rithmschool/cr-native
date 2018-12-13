@@ -1,6 +1,6 @@
 import React from 'react';
-import {TouchableOpacity, Text, Image, View} from 'react-native';
-import {ListItem} from 'native-base';
+import { TouchableOpacity, Text, Image, View } from 'react-native';
+import { ListItem } from 'native-base';
 import styles from '../screens/CardStylesheet';
 
 class BlogCard extends React.Component {
@@ -12,12 +12,12 @@ class BlogCard extends React.Component {
     const date = new Date(this.props.post.created_at);
     const formattedDate = date.toDateString();
     const header_url = this.props.post.header_url;
-    console.log('header url:', header_url);
     return (
       <ListItem>
         <TouchableOpacity
           onPress={this._handleButton}
-          style={styles.cardContainer}>
+          style={styles.cardContainer}
+        >
           <View style={styles.cardBody}>
             <Text style={styles.cardTitle}>{this.props.post.title}</Text>
             <Text style={styles.cardText}>
@@ -31,7 +31,7 @@ class BlogCard extends React.Component {
               <Image
                 style={styles.image}
                 source={{
-                  uri: header_url,
+                  uri: header_url
                 }}
               />
             ) : null}
