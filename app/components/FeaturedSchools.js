@@ -59,7 +59,7 @@ export default class FeaturedSchools extends React.Component {
       <View style={styles.container}>
         <Carousel
           autoplay
-          autoplayTimeout={2000}
+          autoplayTimeout={5000}
           loop
           index={0}
           pageSize={BannerWidth}
@@ -82,11 +82,16 @@ const styles = StyleSheet.create({
   cardText: {
     marginTop: 20
   },
+  cardTextLabel: {
+    fontFamily: 'open-sans-regular'
+  },
   name: {
     textAlign: 'left',
     fontWeight: 'bold',
     fontSize: 35,
-    paddingVertical: 15
+    paddingVertical: 15,
+    textAlign: 'center',
+    fontFamily: 'share-tech'
   },
   reviewTitle: {
     textAlign: 'left',
@@ -102,7 +107,8 @@ const styles = StyleSheet.create({
   imageParent: {
     alignItems: 'center',
     height: BannerHeight,
-    paddingHorizontal: 25
+    paddingHorizontal: 20,
+    marginTop: 40
   },
   button: {
     height: BannerHeight

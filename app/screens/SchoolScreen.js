@@ -26,7 +26,9 @@ class SchoolScreen extends Component {
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      fontFamily: 'share-tech',
+      fontSize: 25
     }
   });
 
@@ -115,7 +117,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 35,
     paddingVertical: 15,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'share-tech'
   },
   reviewTitle: {
     textAlign: 'left',

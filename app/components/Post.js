@@ -10,11 +10,10 @@ class Post extends React.Component {
       <View style={styles.postContainer}>
         <View style={styles.titleContainer}>
           <Text style={styles.postTitle}>{this.props.post.title}</Text>
-
         </View>
         <View style={styles.authorContainer}>
           <Text style={styles.authorText}>{this.props.post.author}</Text>
-          <Text style={styles.dateText}>  •  {formattedDate}</Text>
+          <Text style={styles.dateText}> • {formattedDate}</Text>
         </View>
         <View style={styles.bodyContainer}>
           <Text style={styles.bodyText}>{this.props.post.body}</Text>
@@ -30,7 +29,7 @@ const styles = StyleSheet.create({
   postContainer: {
     flex: 1,
     paddingTop: 15,
-    paddingHorizontal: 20,
+    paddingHorizontal: 20
   },
   titleContainer: {
     flex: 1,
@@ -45,7 +44,7 @@ const styles = StyleSheet.create({
   bodyContainer: {
     flex: 1,
     flexDirection: 'row',
-    paddingBottom: 15,
+    paddingBottom: 15
   },
   authorText: {
     fontSize: 14,
@@ -55,17 +54,19 @@ const styles = StyleSheet.create({
   dateText: {
     fontSize: 14,
     color: 'grey',
-    textAlign: 'left',
+    textAlign: 'left'
   },
   bodyText: {
     fontSize: 16,
-    lineHeight: 28
+    lineHeight: 28,
+    fontFamily: 'open-sans-regular'
   },
   postTitle: {
-    fontSize: 30,
+    fontSize: 38,
     fontWeight: 'bold',
-    textAlign: 'left'
-  },
+    textAlign: 'left',
+    fontFamily: 'share-tech'
+  }
 });
 
 export default Post;

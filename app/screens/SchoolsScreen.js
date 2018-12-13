@@ -20,7 +20,9 @@ export default class SchoolsScreen extends React.Component {
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      fontFamily: 'share-tech',
+      fontSize: 25
     }
   };
 
