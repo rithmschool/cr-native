@@ -19,6 +19,7 @@ export default class SchoolsScreen extends React.Component {
   state = {
     schools: [],
     loading: true,
+<<<<<<< HEAD
     search: ''
   };
 
@@ -30,7 +31,54 @@ export default class SchoolsScreen extends React.Component {
       }
     });
     this.setState({ schools: schoolsData.data.schools, loading: false });
+=======
+    page: 1
+  };
+
+  loadResources = async (page) => {
+    try {
+      const url = `${PROXY_URL}/schools`;
+      let response = await axios.get(url, { params: { page } });
+      let data = response.data;
+      return data.schools;
+    } catch (error) {
+      console.log('Error:', error);
+    }
+  };
+
+  async componentDidMount() {
+    let schools = await this.loadResources(this.state.page);
+    this.setState({ schools, loading: false });
   }
+
+  async componentDidUpdate(prevProps, prevState) {
+    if (prevState.page !== this.state.page) {
+      let newSchools = await this.loadResources(this.state.page);
+
+      const updatedSchools = [...this.state.schools, ...newSchools];
+      this.setState({
+        schools: updatedSchools,
+      });
+    }
+>>>>>>> a2e683f28a5c3ec4a924f47553e95b02d6d51f68
+  }
+
+  isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    const paddingToBottom = 20;
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
+
+  handleScroll = evt => {
+    if (this.isCloseToBottom(evt.nativeEvent)) {
+      let nextPage = this.state.page + 1;
+      this.setState({
+        page: nextPage,
+      });
+    }
+  };
 
   render() {
     if (this.state.loading) {
@@ -58,6 +106,7 @@ export default class SchoolsScreen extends React.Component {
 
     return (
       <Container>
+<<<<<<< HEAD
         <TextInput
           lable="Search"
           placeholder="Search by school name"
@@ -67,6 +116,9 @@ export default class SchoolsScreen extends React.Component {
         />
 
         <Content>
+=======
+        <Content onScroll={this.handleScroll}>
+>>>>>>> a2e683f28a5c3ec4a924f47553e95b02d6d51f68
           <List>{schoolCards}</List>
         </Content>
       </Container>

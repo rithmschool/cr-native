@@ -7,7 +7,7 @@ import Stars from '../components/Stars';
 const MAX_LOCATION_CHARS = 48; // max number of characters displayed for locations list
 
 function formatCities(cities) {
-  let locations = cities.reduce((s, c) => s + `${c}, `, '').slice(0, -2);
+  let locations = cities.reduce((s, c) => s + `${c.name}, `, '').slice(0, -2);
   if (locations.length > MAX_LOCATION_CHARS)
     locations = locations.slice(0, MAX_LOCATION_CHARS).concat('...');
   return locations;
@@ -45,7 +45,7 @@ class SchoolCard extends React.Component {
               style={styles.image}
               source={{
                 uri:
-                  'https://www.rithmschool.com/assets/logos/300logo-e647a12a86a37452242b8a21b69d9d1dc4062424c1aba75e17ca49ba66787120.jpg'
+                  this.props.school.logo_url
               }}
             />
           </View>

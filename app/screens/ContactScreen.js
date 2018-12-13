@@ -1,20 +1,15 @@
 import React from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  Button,
-  Picker,
-  Text,
-  Modal,
-  View,
-  Platform
-} from 'react-native';
-import { ExpoLinksView } from '@expo/samples';
+import { StyleSheet } from 'react-native';
+import axios from 'axios'
+import { PROXY_URL } from '../config';
+import { Container, Header, Content, Picker, Form, Button, Text, Input, Item, Label, Textarea,Icon } from "native-base";
+import {StackActions} from 'react-navigation'
 
-export default class LinksScreen extends React.Component {
+export default class ContactScreen extends React.Component {
   constructor(props) {
     super(props);
+    let school = props.navigation.getParam('school')
+    console.log(school.campuses)
     this.state = {
       message: '',
       phone: '',
@@ -22,41 +17,85 @@ export default class LinksScreen extends React.Component {
       email: '',
       campus_id: '',
       course_id: '',
-      school_id: '',
-      contact: '',
-      modalVisible: false
-      // contact_email: ''
+      school_id: school.id,
+      contact: school.contact.name,
+      contact_email: school.contact.email,
+      courseArr:[]
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
-  static defaultProps = {
-    campus_id: 455,
-    school_id: 153,
-    campuses: { Rio: 1, 'Sao Paulo': 2, 'San Francisco': 3, Fremont: 4 },
-    courses: { 'Full Stack Web Development': 510, 'Meme Development': 415 },
-    course_ids: []
-  };
 
   static navigationOptions = {
     title: 'Start The Conversation'
   };
 
-  handleSubmit() {
-    console.log(this.state);
+  handleName = (text) => {
+    this.setState({name:text});
   }
 
-  setModalVisible(visible) {
-    this.setState({ modalVisible: visible });
+  handleEmail = (text) => {
+    this.setState({email:text});
+  }
+
+  handlePhone = (text) => {
+    this.setState({phone:text});
+  }
+
+  handleMessage = (text) => {
+    this.setState({message:text});
+    console.log(this.state)
+  }
+
+  handleCampus = (text) => {
+    this.setState({campus_id:text});
+    this.setState({courseArr:this.props.navigation.getParam('school').campuses[text].courses});
+  }
+
+  handleCourse = (text) => {
+    this.setState({course_id:text})
+  }
+
+  async handleSubmit() {
+    const {'courseArr':[],...data}=this.state
+    let resp = await axios({
+      method:'post',
+      url:`${PROXY_URL}/contact`,
+      data
+    })
+    const popAction = StackActions.pop({n:1})
+    this.props.navigation.dispatch(popAction)
+
   }
 
   render() {
-    const campusEntries = Object.entries(this.props.campuses);
 
-    const campusItems = campusEntries.map(entry => (
-      <Picker.Item label={entry[0]} value={entry[1]} />
+    //Campus pickers
+    const campusEntries = Object.entries(this.props.navigation.getParam('school').campuses);
+    const campusItems = campusEntries.map(campus => (
+      <Picker.Item key={campus[0]} label={campus[1].name} value={campus[0]} />
     ));
 
+    let campusPicker = 
+    <Picker
+    mode="dropdown"
+    iosIcon={<Icon name="ios-arrow-down-outline" />}
+    placeholder="Select your campus"
+    placeholderStyle={{ color: "#bfc6ea" }}
+    placeholderIconColor="#007aff"
+    style={{ width: undefined }}
+    selectedValue={this.state.campus_id}
+    onValueChange={this.handleCampus}>
+    {campusItems}
+    </Picker>
+    
+    //Course pickers
+
+    const courseArr = this.state.courseArr;
+    const courseItems = courseArr.map(course => (
+      <Picker.Item key={course.id} label={course.name} value={course.id} />
+    ));
+
+<<<<<<< HEAD
     let coursePicker;
     if (Platform.OS === 'android') {
       coursePicker = (
@@ -119,6 +158,54 @@ export default class LinksScreen extends React.Component {
         </Picker> */}
         <Button title="Submit" onPress={this.handleSubmit} />
       </View>
+=======
+    let coursePicker = 
+    <Picker
+    mode="dropdown"
+    iosIcon={<Icon name="ios-arrow-down-outline" />}
+    placeholder="Select your Course"
+    placeholderStyle={{ color: "#bfc6ea" }}
+    placeholderIconColor="#007aff"
+    style={{ width: undefined }}
+    selectedValue={this.state.course_id}
+    onValueChange={this.handleCourse}>
+    {courseItems}
+    </Picker>
+
+    return (
+      <Container>
+      <Header />
+      <Content>
+        <Form>
+          <Item floatingLabel>
+            <Label>Name</Label>
+            <Input onChangeText={this.handleName} value={this.state.name}/>
+          </Item>
+          <Item floatingLabel>
+            <Label>Email</Label>
+            <Input onChangeText={this.handleEmail} value={this.state.email}/>
+          </Item>
+          <Item floatingLabel>
+            <Label>Phone</Label>
+            <Input onChangeText={this.handlePhone} value={this.state.phone}/>
+          </Item>
+          <Item floatingLabel last>
+            <Label>Message</Label>
+            <Input onChangeText={this.handleMessage} value={this.state.message}/>
+          </Item>
+          <Item>
+            {campusPicker}
+          </Item>
+          <Item>
+            {coursePicker}
+          </Item>
+          <Button full success onPress={this.handleSubmit}>
+            <Text>Submit</Text>
+          </Button>
+        </Form>
+      </Content>
+    </Container>
+>>>>>>> a2e683f28a5c3ec4a924f47553e95b02d6d51f68
     );
   }
 }

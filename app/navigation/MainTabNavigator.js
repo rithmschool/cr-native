@@ -11,6 +11,25 @@ import BlogScreen from '../screens/BlogScreen';
 import PostScreen from '../screens/PostScreen';
 import SchoolScreen from '../screens/SchoolScreen';
 import ContactScreen from '../screens/ContactScreen';
+import HomeScreen from '../screens/HomeScreen';
+
+const HomeStack = createStackNavigator({
+  Home: HomeScreen,
+  School: SchoolScreen
+});
+
+HomeStack.navigationOptions = {
+  tabBarOptions: {
+    activeTintColor: '#4F922F'
+  },
+  tabBarLabel: 'Home',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? `ios-home` : 'md-home'}
+    />
+  )
+};
 
 const SchoolsStack = createStackNavigator({
   Schools: SchoolsScreen,
@@ -50,6 +69,7 @@ BlogStack.navigationOptions = {
 };
 
 export default createBottomTabNavigator({
+  HomeStack,
   SchoolsStack,
   BlogStack
 });
