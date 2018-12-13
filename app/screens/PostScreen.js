@@ -98,8 +98,7 @@ class PostScreen extends Component {
                 styles.backgroundImage,
                 { opacity: imageOpacity, transform: [{ translateY: imageTranslate }] },
               ]}
-              // source={{ uri: this.state.post.header_url }}
-              source={require('../assets/images/cat.jpg')}
+              source={{ uri: this.state.post.header_url }}
             />
           </Animated.View>
         </View>
