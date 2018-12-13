@@ -17,7 +17,14 @@ export default class BlogScreen extends Component {
   };
 
   static navigationOptions = {
-    title: 'Blog'
+    title: 'Blog',
+    headerStyle: {
+      backgroundColor: '#4F922F'
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold'
+    }
   };
 
   componentDidMount() {
@@ -108,12 +115,16 @@ export default class BlogScreen extends Component {
                     key={post.id}
                     post={post}
                     navigate={() =>
-                      this.props.navigation.navigate('Post', { id: post.id })
+                      this.props.navigation.navigate('Post', {
+                        id: post.id,
+                        title: post.title
+                      })
                     }
                   />
                 );
               }
             })}
+            ;
           </List>
         </Content>
       </Container>

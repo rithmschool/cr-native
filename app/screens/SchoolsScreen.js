@@ -13,7 +13,14 @@ import { PROXY_URL } from '../config';
 
 export default class SchoolsScreen extends React.Component {
   static navigationOptions = {
-    title: 'Schools'
+    title: 'Schools',
+    headerStyle: {
+      backgroundColor: '#4F922F'
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold'
+    }
   };
 
   state = {
