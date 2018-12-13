@@ -19,23 +19,11 @@ export default class SchoolsScreen extends React.Component {
   state = {
     schools: [],
     loading: true,
-<<<<<<< HEAD
+    page: 1,
     search: ''
   };
 
-  async componentDidMount() {
-    let schoolsData = await axios.get(`${PROXY_URL}/schools?page=2`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
-      }
-    });
-    this.setState({ schools: schoolsData.data.schools, loading: false });
-=======
-    page: 1
-  };
-
-  loadResources = async (page) => {
+  loadResources = async page => {
     try {
       const url = `${PROXY_URL}/schools`;
       let response = await axios.get(url, { params: { page } });
@@ -57,10 +45,9 @@ export default class SchoolsScreen extends React.Component {
 
       const updatedSchools = [...this.state.schools, ...newSchools];
       this.setState({
-        schools: updatedSchools,
+        schools: updatedSchools
       });
     }
->>>>>>> a2e683f28a5c3ec4a924f47553e95b02d6d51f68
   }
 
   isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
@@ -75,7 +62,7 @@ export default class SchoolsScreen extends React.Component {
     if (this.isCloseToBottom(evt.nativeEvent)) {
       let nextPage = this.state.page + 1;
       this.setState({
-        page: nextPage,
+        page: nextPage
       });
     }
   };
@@ -106,7 +93,6 @@ export default class SchoolsScreen extends React.Component {
 
     return (
       <Container>
-<<<<<<< HEAD
         <TextInput
           lable="Search"
           placeholder="Search by school name"
@@ -115,10 +101,7 @@ export default class SchoolsScreen extends React.Component {
           style={styles.search}
         />
 
-        <Content>
-=======
         <Content onScroll={this.handleScroll}>
->>>>>>> a2e683f28a5c3ec4a924f47553e95b02d6d51f68
           <List>{schoolCards}</List>
         </Content>
       </Container>
