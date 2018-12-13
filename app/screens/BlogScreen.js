@@ -85,7 +85,13 @@ export default class BlogScreen extends Component {
     this.props.navigation.navigate('Post', { id });
   };
 
-  requestNewPosts(search) {}
+  async requestNewPosts(search) {
+    const url = `${PROXY_URL}/blog?search=${search}`;
+    let response = await axios.get(url);
+    this.setState({
+      posts: response.data.posts
+    });
+  }
 
   handleChange(search) {
     // Update the search input with what they typed
@@ -95,7 +101,7 @@ export default class BlogScreen extends Component {
     let requestNewPosts = () => {
       this.requestNewPosts(search);
     };
-    debounce(requestNewPosts, 1000)();
+    debounce(requestNewPosts, 500)();
   }
 
   render() {
@@ -121,7 +127,11 @@ export default class BlogScreen extends Component {
         <Content onScroll={this.handleScroll}>
           <List>
             {this.state.posts.map(post => {
-              if (post.title.includes(this.state.search)) {
+              if (
+                post.title
+                  .toLowerCase()
+                  .includes(this.state.search.toLowerCase())
+              ) {
                 const date = new Date(post.created_at);
                 const formattedDate = date.toDateString();
                 return (

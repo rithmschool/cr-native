@@ -75,6 +75,25 @@ export default class SchoolsScreen extends React.Component {
     }
   };
 
+  async requestNewSchools(search) {
+    const url = `${PROXY_URL}/schools?search=${search}`;
+    let response = await axios.get(url);
+    this.setState({
+      schools: response.data.schools
+    });
+  }
+
+  handleChange(search) {
+    // Update the search input with what they typed
+    this.setState({ search });
+
+    //debounce a request for what to update for this.state
+    let requestNewSchools = () => {
+      this.requestNewSchools(search);
+    };
+    debounce(requestNewSchools, 500)();
+  }
+
   render() {
     if (this.state.loading) {
       return (
@@ -86,7 +105,7 @@ export default class SchoolsScreen extends React.Component {
       );
     }
     let schoolCards = this.state.schools.map(school => {
-      if (school.name.includes(this.state.search)) {
+      if (school.name.toLowerCase().includes(this.state.search.toLowerCase())) {
         return (
           <SchoolCard
             school={school}
@@ -105,7 +124,7 @@ export default class SchoolsScreen extends React.Component {
           lable="Search"
           placeholder="Search by school name"
           value={this.state.search}
-          onChangeText={search => this.setState({ search })}
+          onChangeText={search => this.handleChange(search)}
           style={styles.search}
         />
 
