@@ -9,7 +9,6 @@ class BlogCard extends React.Component {
   }
 
   render() {
-    console.log('render blog card', this.props.post);
     const date = new Date(this.props.post.created_at);
     const formattedDate = date.toDateString();
     return (

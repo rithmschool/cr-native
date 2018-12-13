@@ -9,7 +9,6 @@ export default class ContactScreen extends React.Component {
   constructor(props) {
     super(props);
     let school = props.navigation.getParam('school')
-    console.log(school.campuses)
     this.state = {
       message: '',
       phone: '',
@@ -43,7 +42,6 @@ export default class ContactScreen extends React.Component {
 
   handleMessage = (text) => {
     this.setState({message:text});
-    console.log(this.state)
   }
 
   handleCampus = (text) => {

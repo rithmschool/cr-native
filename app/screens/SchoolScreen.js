@@ -46,8 +46,6 @@ class SchoolScreen extends Component {
       <ReviewCard key={review.id} review={review} />
     ));
 
-    console.log('this.state.school', this.state.school);
-
     return (
       <ScrollView style={styles.container}>
         <View style={styles.imageParent}>
