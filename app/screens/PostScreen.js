@@ -107,8 +107,7 @@ class PostScreen extends Component {
                   transform: [{ translateY: imageTranslate }]
                 }
               ]}
-              // source={{ uri: this.state.post.header_url }}
-              source={require('../assets/images/cat.jpg')}
+              source={{ uri: this.state.post.header_url }}
             />
           </Animated.View>
         </View>
