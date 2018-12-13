@@ -17,10 +17,10 @@ export default class SchoolsScreen extends React.Component {
     page: 1
   };
 
-  loadResources = async(page) => {
+  loadResources = async (page) => {
     try {
       const url = `${PROXY_URL}/schools`;
-      let response = await axios.get(url, {params: {page}});
+      let response = await axios.get(url, { params: { page } });
       let data = response.data;
       return data.schools;
     } catch (error) {
@@ -44,7 +44,7 @@ export default class SchoolsScreen extends React.Component {
     }
   }
 
-  isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+  isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
     const paddingToBottom = 20;
     return (
       layoutMeasurement.height + contentOffset.y >=
