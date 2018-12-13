@@ -8,7 +8,14 @@ import { PROXY_URL } from '../config';
 
 export default class SchoolsScreen extends React.Component {
   static navigationOptions = {
-    title: 'Schools'
+    title: 'Schools',
+    headerStyle: {
+      backgroundColor: '#4F922F'
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold'
+    }
   };
 
   state = {
@@ -17,10 +24,10 @@ export default class SchoolsScreen extends React.Component {
     page: 1
   };
 
-  loadResources = async(page) => {
+  loadResources = async page => {
     try {
       const url = `${PROXY_URL}/schools`;
-      let response = await axios.get(url, {params: {page}});
+      let response = await axios.get(url, { params: { page } });
       let data = response.data;
       return data.schools;
     } catch (error) {
@@ -39,12 +46,12 @@ export default class SchoolsScreen extends React.Component {
 
       const updatedSchools = [...this.state.schools, ...newSchools];
       this.setState({
-        schools: updatedSchools,
+        schools: updatedSchools
       });
     }
   }
 
-  isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+  isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
     const paddingToBottom = 20;
     return (
       layoutMeasurement.height + contentOffset.y >=
@@ -56,7 +63,7 @@ export default class SchoolsScreen extends React.Component {
     if (this.isCloseToBottom(evt.nativeEvent)) {
       let nextPage = this.state.page + 1;
       this.setState({
-        page: nextPage,
+        page: nextPage
       });
     }
   };
@@ -76,7 +83,9 @@ export default class SchoolsScreen extends React.Component {
         <SchoolCard
           school={school}
           navigate={() =>
-            this.props.navigation.navigate('School', { id: school.id })
+            this.props.navigation.navigate('School', {
+              id: school.id
+            })
           }
           key={school.id}
         />
