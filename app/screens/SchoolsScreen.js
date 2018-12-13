@@ -69,7 +69,7 @@ export default class SchoolsScreen extends React.Component {
   };
 
   handleScroll = evt => {
-    if (this.isCloseToBottom(evt.nativeEvent)) {
+    if (this.state.search === '' && this.isCloseToBottom(evt.nativeEvent)) {
       let nextPage = this.state.page + 1;
       this.setState({
         page: nextPage
