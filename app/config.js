@@ -1,1 +1,1 @@
-export const PROXY_URL = 'http://192.168.1.68:3001';
+export const PROXY_URL = 'http://cr987654321.herokuapp.com';
