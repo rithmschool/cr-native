@@ -66,6 +66,8 @@ export default class BlogScreen extends Component {
     }
   }
 
+  //returns true if you are 20 pixels from the bottom of the page to allow for
+  //infinite scroll.
   isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
     const paddingToBottom = 20;
     return (
@@ -74,6 +76,7 @@ export default class BlogScreen extends Component {
     );
   };
 
+  //updates state to load next page if you are close to bottom or state search is empty
   handleScroll = evt => {
     if (this.state.search === '' && this.isCloseToBottom(evt.nativeEvent)) {
       let nextPage = this.state.page + 1;
