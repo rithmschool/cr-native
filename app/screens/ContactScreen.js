@@ -4,7 +4,6 @@ import axios from 'axios';
 import { PROXY_URL } from '../config';
 import {
   Container,
-  Header,
   Content,
   Picker,
   Form,
@@ -13,7 +12,6 @@ import {
   Input,
   Item,
   Label,
-  Textarea,
   Icon
 } from 'native-base';
 import { StackActions } from 'react-navigation';
@@ -37,72 +35,167 @@ export default class ContactScreen extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  static navigationOptions = {
-    title: 'Start The Conversation'
-  };
+  /** Set the navigation header bar */
+  static navigationOptions = ({ navigation }) => ({
+    headerStyle: {
+      backgroundColor: '#4F922F'
+    },
+    title: 'Contact',
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+      fontFamily: 'share-tech',
+      fontSize: 25
+    }
+  });
 
   //separate functions made to change state for each item. 
   //no name property on the input field in react native so we were unable to use the 
   //evt.target/evt.name design structure for a more ellegant solution.
+
+  /** Text field change handlers */
   handleName = text => {
     this.setState({ name: text });
   };
-
   handleEmail = text => {
     this.setState({ email: text });
   };
-
   handlePhone = text => {
     this.setState({ phone: text });
   };
-
   handleMessage = (text) => {
-    this.setState({message:text});
+    this.setState({ message: text });
   }
-
   handleCampus = text => {
-    this.setState({ campus_id: text });
     this.setState({
+      campus_id: text,
       courseArr: this.props.navigation.getParam('school').campuses[text].courses
     });
   };
-
   handleCourse = text => {
     this.setState({ course_id: text });
   };
 
+
+  // return true if passed a valid email string
+  isValidEmail = email => email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g) !== null;
+
+
+  /** Handle form submission and POST to proxy server 
+   * 
+   * This function needs to check for validation before making
+   * a request to server. 
+  */
   async handleSubmit() {
+
     const {
       courseArr: [],
       ...data
     } = this.state;
-    let resp = await axios({
-      method: 'post',
-      url: `${PROXY_URL}/contact`,
-      data
-    });
-    const popAction = StackActions.pop({ n: 1 });
-    this.props.navigation.dispatch(popAction);
+    console.log(data);
+
+
+    /** This should be moved outside of handleSubmit and 
+     * should set errors in state in order to display errors on the 
+     * form
+     */
+    const errors = [];
+    if (data.name === '') errors.push('Name cannot be blank');
+    if (!isValidEmail(data.email)) errors.push('Must enter a valid email');
+    if (data.phone === '') errors.push('Must enter a valid phone number');
+
+
+    /** 
+     * axios call and navigation pop is commented out until
+     * form validation is finished
+     */
+
+    // let resp = await axios({
+    //   method: 'post',
+    //   url: `${PROXY_URL}/contact`,
+    //   data
+    // });
+    // const popAction = StackActions.pop({ n: 1 });
+    // this.props.navigation.dispatch(popAction);
   }
 
   //each course is associated with a campus.  the way the route is written,
   //a course and campus must be picked.  For future versions, the route in rails
   //should be changed to no require a course and campus.
   render() {
-    //Campus pickers
+    // Build pickers for campus
+    const campusPicker = this.buildCampusPicker();
+    // Build course pickers
+    const coursePicker = this.buildCoursePicker();
+
+    return (
+      <Container>
+        <Content>
+          <Form>
+            <Item stackedLabel>
+              <Label>Name</Label>
+              <Input onChangeText={this.handleName} value={this.state.name} />
+            </Item>
+            <Item stackedLabel>
+              <Label>Email</Label>
+              <Input onChangeText={this.handleEmail} value={this.state.email} />
+            </Item>
+            <Item stackedLabel>
+              <Label>Phone</Label>
+              <Input onChangeText={this.handlePhone} value={this.state.phone} />
+            </Item>
+            <Item stackedLabel>
+              <Label>Message</Label>
+              <Input
+                onChangeText={this.handleMessage}
+                value={this.state.message}
+              />
+            </Item>
+            <Label style={styles.dropdownLabel}>Campus</Label>
+            <Item>
+              {campusPicker}
+            </Item>
+            <Label style={styles.dropdownLabel}>Course</Label>
+            <Item>
+              {coursePicker}
+            </Item>
+            <Button full success onPress={this.handleSubmit} style={styles.button}>
+              <Text>Submit</Text>
+            </Button>
+          </Form>
+        </Content>
+      </Container>
+    );
+  }
+
+  /** Sort campuses by city for dropdown list */
+  sortByCity(campuses) {
+    return campuses.sort((a, b) => {
+      var nameA = a[1].name.toUpperCase(); // ignore upper and lowercase
+      var nameB = b[1].name.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) return -1;
+      if (nameA > nameB) return 1;
+      return 0;
+    });
+  }
+
+  /** build and return a Picker dropdown for Campuses in alphabetical order */
+  buildCampusPicker() {
     const campusEntries = Object.entries(
       this.props.navigation.getParam('school').campuses
     );
-    const campusItems = campusEntries.map(campus => (
+    const campusList = this.sortByCity(campusEntries)
+    const campusItems = campusList.map(campus => (
       <Picker.Item key={campus[0]} label={campus[1].name} value={campus[0]} />
     ));
 
-    let campusPicker = (
+    return (
       <Picker
         mode="dropdown"
         iosIcon={<Icon name="ios-arrow-down-outline" />}
         placeholder="Select your campus"
         placeholderStyle={{ color: '#bfc6ea' }}
+        prompt=""
         placeholderIconColor="#007aff"
         style={{ width: undefined }}
         selectedValue={this.state.campus_id}
@@ -111,15 +204,18 @@ export default class ContactScreen extends React.Component {
         {campusItems}
       </Picker>
     );
+  }
 
-    //Course pickers
-
+  /** build and return a Picker dropdown for Courses 
+   * this could be put into alphabetical order
+   */
+  buildCoursePicker() {
     const courseArr = this.state.courseArr;
     const courseItems = courseArr.map(course => (
       <Picker.Item key={course.id} label={course.name} value={course.id} />
     ));
 
-    let coursePicker = (
+    return (
       <Picker
         mode="dropdown"
         iosIcon={<Icon name="ios-arrow-down-outline" />}
@@ -133,40 +229,6 @@ export default class ContactScreen extends React.Component {
         {courseItems}
       </Picker>
     );
-
-    return (
-      <Container>
-        <Header />
-        <Content>
-          <Form>
-            <Item floatingLabel>
-              <Label>Name</Label>
-              <Input onChangeText={this.handleName} value={this.state.name} />
-            </Item>
-            <Item floatingLabel>
-              <Label>Email</Label>
-              <Input onChangeText={this.handleEmail} value={this.state.email} />
-            </Item>
-            <Item floatingLabel>
-              <Label>Phone</Label>
-              <Input onChangeText={this.handlePhone} value={this.state.phone} />
-            </Item>
-            <Item floatingLabel last>
-              <Label>Message</Label>
-              <Input
-                onChangeText={this.handleMessage}
-                value={this.state.message}
-              />
-            </Item>
-            <Item>{campusPicker}</Item>
-            <Item>{coursePicker}</Item>
-            <Button full success onPress={this.handleSubmit}>
-              <Text>Submit</Text>
-            </Button>
-          </Form>
-        </Content>
-      </Container>
-    );
   }
 }
 
@@ -175,6 +237,18 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
     backgroundColor: '#fff'
+  },
+  inputField: {
+
+  },
+  dropdownLabel: {
+    fontSize: 15,
+    color: 'grey',
+    paddingLeft: 15,
+    paddingTop: 25
+  },
+  button: {
+    marginVertical: 10
   },
   picker: { width: 100 }
 });
