@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { StyleSheet, ActivityIndicator, TextInput } from 'react-native';
 import { Container, Content, List } from 'native-base';
 import axios from 'axios';
+import { debounce } from 'underscore';
+
 axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
@@ -23,7 +25,9 @@ export default class BlogScreen extends Component {
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      fontFamily: 'share-tech',
+      fontSize: 25
     }
   };
 
@@ -71,7 +75,7 @@ export default class BlogScreen extends Component {
   };
 
   handleScroll = evt => {
-    if (this.isCloseToBottom(evt.nativeEvent)) {
+    if (this.state.search === '' && this.isCloseToBottom(evt.nativeEvent)) {
       let nextPage = this.state.page + 1;
       this.setState({
         page: nextPage
@@ -82,6 +86,25 @@ export default class BlogScreen extends Component {
   _handleButton = id => {
     this.props.navigation.navigate('Post', { id });
   };
+
+  async requestNewPosts(search) {
+    const url = `${PROXY_URL}/blog?search=${search}`;
+    let response = await axios.get(url);
+    this.setState({
+      posts: response.data.posts
+    });
+  }
+
+  handleChange(search) {
+    // Update the search input with what they typed
+    this.setState({ search });
+
+    //debounce a request for what to update for this.state
+    let requestNewPosts = () => {
+      this.requestNewPosts(search);
+    };
+    debounce(requestNewPosts, 500)();
+  }
 
   render() {
     if (this.state.loading) {
@@ -99,15 +122,18 @@ export default class BlogScreen extends Component {
           lable="Search"
           placeholder="Search by title or topic"
           value={this.state.search}
-          onChangeText={search => this.setState({ search })}
+          onChangeText={search => this.handleChange(search)}
           style={styles.search}
         />
 
         <Content onScroll={this.handleScroll}>
           <List>
             {this.state.posts.map(post => {
-              console.log(post.title);
-              if (post.title.includes(this.state.search)) {
+              if (
+                post.title
+                  .toLowerCase()
+                  .includes(this.state.search.toLowerCase())
+              ) {
                 const date = new Date(post.created_at);
                 const formattedDate = date.toDateString();
                 return (

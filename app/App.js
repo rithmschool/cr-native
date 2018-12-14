@@ -5,15 +5,27 @@ import AppNavigator from './navigation/AppNavigator';
 
 export default class App extends React.Component {
   state = {
+    fontLoaded: false,
     isLoadingComplete: false
   };
 
   async componentWillMount() {
     await Font.loadAsync({
-    'Roboto': require('native-base/Fonts/Roboto.ttf'),
-    'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
-    'Ionicons': require('@expo/vector-icons/fonts/Ionicons.ttf'),
-   });
+      'Roboto': require('native-base/Fonts/Roboto.ttf'),
+      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+      'Ionicons': require('@expo/vector-icons/fonts/Ionicons.ttf'),
+    });
+  }
+
+  async componentDidMount() {
+    await Font.loadAsync({
+      'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
+      'open-sans-regular': require('./assets/fonts/OpenSans-Regular.ttf'),
+      'share-tech': require('./assets/fonts/ShareTech-Regular.ttf')
+    });
+    this.setState({
+      fontLoaded: true
+    });
   }
 
   render() {
@@ -26,12 +38,12 @@ export default class App extends React.Component {
         />
       );
     } else {
-      return (
+      return this.state.fontLoaded ? (
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
           <AppNavigator />
         </View>
-      );
+      ) : null;
     }
   }
 

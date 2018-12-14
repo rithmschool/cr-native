@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, ActivityIndicator, Image } from 'react-native';
-import { Container, Content } from 'native-base';
+import { StyleSheet, ActivityIndicator, Image, Dimensions } from 'react-native';
+import { Container, Content, View } from 'native-base';
 import axios from 'axios';
 import BannerCard from '../components/BannerCard';
 import FeaturedSchools from '../components/FeaturedSchools';
@@ -14,7 +14,9 @@ export default class HomeScreen extends React.Component {
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      fontFamily: 'share-tech',
+      fontSize: 25
     }
   };
 
@@ -49,7 +51,7 @@ export default class HomeScreen extends React.Component {
 
     return (
       <Container>
-        <Content>
+        <Content style={styles.content}>
           <FeaturedSchools
             featuredSchools={this.state.featuredSchools}
             navigation={this.props.navigation}
@@ -65,5 +67,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center'
+  },
+  content: {
+    marginTop: 50
   }
 });
