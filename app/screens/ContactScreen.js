@@ -21,12 +21,7 @@ import { StackActions } from 'react-navigation';
 export default class ContactScreen extends React.Component {
   constructor(props) {
     super(props);
-<<<<<<< HEAD
-    let school = props.navigation.getParam('school')
-=======
     let school = props.navigation.getParam('school');
-    console.log(school.campuses);
->>>>>>> 566aae7b20425faf2c5189096dcc108c2d37f4ae
     this.state = {
       message: '',
       phone: '',
