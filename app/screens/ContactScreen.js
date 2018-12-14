@@ -41,6 +41,9 @@ export default class ContactScreen extends React.Component {
     title: 'Start The Conversation'
   };
 
+  //separate functions made to change state for each item. 
+  //no name property on the input field in react native so we were unable to use the 
+  //evt.target/evt.name design structure for a more ellegant solution.
   handleName = text => {
     this.setState({ name: text });
   };
@@ -82,6 +85,9 @@ export default class ContactScreen extends React.Component {
     this.props.navigation.dispatch(popAction);
   }
 
+  //each course is associated with a campus.  the way the route is written,
+  //a course and campus must be picked.  For future versions, the route in rails
+  //should be changed to no require a course and campus.
   render() {
     //Campus pickers
     const campusEntries = Object.entries(

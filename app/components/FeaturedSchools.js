@@ -12,9 +12,10 @@ import { Button } from 'native-base';
 import Stars from './Stars';
 
 const BannerWidth = Dimensions.get('window').width;
-const BannerHeight = 400;
-const MAX_LOCATION_CHARS = 10000000; // max number of characters displayed for locations list
+const BannerHeight = 420;//height expanded so school dots dont run onto the dots on the bottom
+const MAX_LOCATION_CHARS = 10000000; // max number of characters displayed for locations list. this feature was set to a very large number to dispaly all the text.
 
+//function formats the location into an array that has a readable format.
 function formatCities(cities) {
   let locations = cities.reduce((s, c) => s + `${c.name}, `, '').slice(0, -2);
   if (locations.length > MAX_LOCATION_CHARS)
@@ -23,6 +24,7 @@ function formatCities(cities) {
 }
 
 export default class FeaturedSchools extends React.Component {
+  //renders the school block.
   renderPage(school) {
     let locations = formatCities(school.cities);
     return (
@@ -53,7 +55,7 @@ export default class FeaturedSchools extends React.Component {
       </Button>
     );
   }
-
+  //renders the carousel
   render() {
     return (
       <View style={styles.container}>
@@ -111,7 +113,8 @@ const styles = StyleSheet.create({
     marginTop: 40
   },
   button: {
-    height: BannerHeight
+    height: BannerHeight,
+    padding: 30
   },
   buttonText: {
     fontWeight: 'bold',
