@@ -9,19 +9,14 @@ export default class App extends React.Component {
     isLoadingComplete: false
   };
 
-  async componentWillMount() {
-    await Font.loadAsync({
-      'Roboto': require('native-base/Fonts/Roboto.ttf'),
-      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
-      'Ionicons': require('@expo/vector-icons/fonts/Ionicons.ttf'),
-    });
-  }
-
   async componentDidMount() {
     await Font.loadAsync({
       'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
       'open-sans-regular': require('./assets/fonts/OpenSans-Regular.ttf'),
-      'share-tech': require('./assets/fonts/ShareTech-Regular.ttf')
+      'share-tech': require('./assets/fonts/ShareTech-Regular.ttf'),
+      'Roboto': require('native-base/Fonts/Roboto.ttf'),
+      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+      'Ionicons': require('@expo/vector-icons/fonts/Ionicons.ttf'),
     });
     this.setState({
       fontLoaded: true
