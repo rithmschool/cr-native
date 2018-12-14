@@ -88,11 +88,13 @@ export default class BlogScreen extends Component {
   };
 
   async requestNewPosts(search) {
-    const url = `${PROXY_URL}/blog?search=${search}`;
-    let response = await axios.get(url);
-    this.setState({
-      posts: response.data.posts
-    });
+    if (search.length > 0) {
+      const url = `${PROXY_URL}/blog?search=${search}`;
+      let response = await axios.get(url);
+      this.setState({
+        posts: response.data.posts
+      });
+    }
   }
 
   handleChange(search) {
@@ -130,6 +132,7 @@ export default class BlogScreen extends Component {
           <List>
             {this.state.posts.map(post => {
               if (
+                this.state.search === '' ||
                 post.title
                   .toLowerCase()
                   .includes(this.state.search.toLowerCase())
