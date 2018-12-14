@@ -2,9 +2,9 @@
 React Native App for Course Report
 
 # Table of Contents
-[Getting Started](#getting-started) 
-[Get Proxy Server Running](#get-proxy-server-running) 
-[TODO](#todo)
+1. [Getting Started](#getting-started) 
+2. [Get Proxy Server Running](#get-proxy-server-running) 
+3. [TODO](#todo)
 
 # Getting Started
 1. Install expo with `npm install -g expo-cli`
