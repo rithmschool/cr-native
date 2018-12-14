@@ -166,21 +166,14 @@ export default class ContactScreen extends React.Component {
     return campuses.sort((a, b) => {
       var nameA = a[1].name.toUpperCase(); // ignore upper and lowercase
       var nameB = b[1].name.toUpperCase(); // ignore upper and lowercase
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-    
-      // names must be equal
+      if (nameA < nameB) return -1;
+      if (nameA > nameB) return 1;
       return 0;
     });
   }
 
-  /** build and return a Picker dropdown for Campuses */
+  /** build and return a Picker dropdown for Campuses in alphabetical order */
   buildCampusPicker() {
-    // Build pickers for campus
     const campusEntries = Object.entries(
       this.props.navigation.getParam('school').campuses
     );
@@ -206,7 +199,9 @@ export default class ContactScreen extends React.Component {
     );
   }
 
-  /** build and return a Picker dropdown for Courses  */
+  /** build and return a Picker dropdown for Courses 
+   * this could be put into alphabetical order
+   */
   buildCoursePicker() {
     const courseArr = this.state.courseArr;
     const courseItems = courseArr.map(course => (
