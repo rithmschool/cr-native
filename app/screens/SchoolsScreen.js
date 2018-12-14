@@ -37,7 +37,8 @@ export default class SchoolsScreen extends React.Component {
     schools: [],
     loading: true,
     page: 1,
-    search: ''
+    search: '',
+    searchLoading: false
   };
 
   getLocationAsync = async () => {
@@ -109,16 +110,18 @@ export default class SchoolsScreen extends React.Component {
   };
 
   async requestNewSchools(search) {
-    const url = `${PROXY_URL}/schools?search=${search}`;
-    let response = await axios.get(url);
-    this.setState({
-      schools: response.data.schools
-    });
+    if (this.state.search.length > 0) {
+      const url = `${PROXY_URL}/schools?search=${search}`;
+      let response = await axios.get(url);
+      this.setState({
+        schools: response.data.schools
+      });
+    }
   }
 
   handleChange(search) {
     // Update the search input with what they typed
-    this.setState({ search });
+    this.setState({ search, searchLoading: true });
 
     //debounce a request for what to update for this.state
     let requestNewSchools = () => {
@@ -138,7 +141,10 @@ export default class SchoolsScreen extends React.Component {
       );
     }
     let schoolCards = this.state.schools.map(school => {
-      if (school.name.toLowerCase().includes(this.state.search.toLowerCase())) {
+      if (
+        this.state.search === '' ||
+        school.name.toLowerCase().includes(this.state.search.toLowerCase())
+      ) {
         return (
           <SchoolCard
             school={school}
