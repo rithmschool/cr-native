@@ -91,6 +91,8 @@ export default class SchoolsScreen extends React.Component {
     }
   }
 
+  //returns true if you are 20 pixels from the bottom of the page to allow for
+  //infinite scroll.
   isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
     const paddingToBottom = 20;
     return (
@@ -99,6 +101,7 @@ export default class SchoolsScreen extends React.Component {
     );
   };
 
+   //updates state to load next page if you are close to bottom or state search is empty
   handleScroll = evt => {
     if (this.state.search === '' && this.isCloseToBottom(evt.nativeEvent)) {
       let nextPage = this.state.page + 1;
@@ -110,6 +113,7 @@ export default class SchoolsScreen extends React.Component {
 
   searchAPI = search => axios.get(`${PROXY_URL}/schools?search=${search}`);
 
+  //sends a request after 250 milliseconds, but will only resolve the last promise
   searchAPIDebounced = AwesomeDebouncePromise(this.searchAPI, 250);
 
   async handleChange(search) {
