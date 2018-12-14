@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, ActivityIndicator, TextInput } from 'react-native';
 import { Container, Content, List } from 'native-base';
 import axios from 'axios';
-import { debounce } from 'underscore';
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
 
 axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
@@ -15,7 +15,8 @@ export default class BlogScreen extends Component {
     loading: true,
     page: 1,
     posts: [],
-    search: ''
+    search: '',
+    searchLoading: false
   };
 
   static navigationOptions = {
@@ -90,25 +91,17 @@ export default class BlogScreen extends Component {
     this.props.navigation.navigate('Post', { id });
   };
 
-  async requestNewPosts(search) {
-    if (search.length > 0) {
-      const url = `${PROXY_URL}/blog?search=${search}`;
-      let response = await axios.get(url);
-      this.setState({
-        posts: response.data.posts
-      });
-    }
-  }
+  searchAPI = search => axios.get(`${PROXY_URL}/blog?search=${search}`);
 
-  handleChange(search) {
+  searchAPIDebounced = AwesomeDebouncePromise(this.searchAPI, 250);
+
+  async handleChange(search) {
     // Update the search input with what they typed
-    this.setState({ search });
+    this.setState({ search, searchLoading: true });
+    const posts = await this.searchAPIDebounced(search);
 
-    //debounce a request for what to update for this.state
-    let requestNewPosts = () => {
-      this.requestNewPosts(search);
-    };
-    debounce(requestNewPosts, 500)();
+    //Update state with the new posts
+    this.setState({ posts: posts.data.posts, searchLoading: false });
   }
 
   render() {
@@ -132,6 +125,13 @@ export default class BlogScreen extends Component {
         />
 
         <Content onScroll={this.handleScroll}>
+          {this.state.searchLoading ? (
+            <ActivityIndicator
+              size="large"
+              color="#4F922F"
+              style={styles.activityIndicator}
+            />
+          ) : null}
           <List>
             {this.state.posts.map(post => {
               if (

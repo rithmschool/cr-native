@@ -6,17 +6,16 @@ import {
   TextInput
 } from 'react-native';
 import { Container, Content, List } from 'native-base';
-import {Location, Permissions} from 'expo';
+import { Location, Permissions } from 'expo';
 import axios from 'axios';
-import debounce from 'lodash/debounce';
 import SchoolCard from '../components/SchoolCard';
-
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import { PROXY_URL } from '../config';
 
 const deltas = {
   latDelta: 0.0922,
-  longDelta: 0.0421,
-}
+  longDelta: 0.0421
+};
 
 export default class SchoolsScreen extends React.Component {
   static navigationOptions = {
@@ -46,17 +45,17 @@ export default class SchoolsScreen extends React.Component {
     if (status !== 'granted') {
       this.setState({
         errorMessage: 'Permission to access location was denied'
-      })
+      });
     }
 
     let location = await Location.getCurrentPositionAsync({});
     const region = {
       lat: location.coords.latitude,
-      long: location.coords.longitude,
-    }
+      long: location.coords.longitude
+    };
 
-    await this.setState({region});
-  }
+    await this.setState({ region });
+  };
 
   loadResources = async page => {
     try {
@@ -64,7 +63,7 @@ export default class SchoolsScreen extends React.Component {
       let response;
       if (this.state.region) {
         let loc = `${this.state.region.lat},${this.state.region.long}`;
-        response = await axios.get(url, { params: { page, loc } })
+        response = await axios.get(url, { params: { page, loc } });
       } else {
         response = await axios.get(url, { params: { page } });
       }
@@ -109,25 +108,16 @@ export default class SchoolsScreen extends React.Component {
     }
   };
 
-  async requestNewSchools(search) {
-    if (this.state.search.length > 0) {
-      const url = `${PROXY_URL}/schools?search=${search}`;
-      let response = await axios.get(url);
-      this.setState({
-        schools: response.data.schools
-      });
-    }
-  }
+  searchAPI = search => axios.get(`${PROXY_URL}/schools?search=${search}`);
 
-  handleChange(search) {
+  searchAPIDebounced = AwesomeDebouncePromise(this.searchAPI, 250);
+
+  async handleChange(search) {
     // Update the search input with what they typed
     this.setState({ search, searchLoading: true });
-
-    //debounce a request for what to update for this.state
-    let requestNewSchools = () => {
-      this.requestNewSchools(search);
-    };
-    debounce(requestNewSchools, 500)();
+    const schools = await this.searchAPIDebounced(search);
+    //Update state with the new schools
+    this.setState({ schools: schools.data.schools, searchLoading: false });
   }
 
   render() {
@@ -166,8 +156,15 @@ export default class SchoolsScreen extends React.Component {
           onChangeText={search => this.handleChange(search)}
           style={styles.search}
         />
-
+        {this.state.searchLoading}
         <Content onScroll={this.handleScroll}>
+          {this.state.searchLoading ? (
+            <ActivityIndicator
+              size="large"
+              color="#4F922F"
+              style={styles.activityIndicator}
+            />
+          ) : null}
           <List>{schoolCards}</List>
         </Content>
       </Container>
