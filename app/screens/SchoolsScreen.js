@@ -6,11 +6,17 @@ import {
   TextInput
 } from 'react-native';
 import { Container, Content, List } from 'native-base';
+import {Location, Permissions} from 'expo';
 import axios from 'axios';
 import debounce from 'lodash/debounce';
 import SchoolCard from '../components/SchoolCard';
 
 import { PROXY_URL } from '../config';
+
+const deltas = {
+  latDelta: 0.0922,
+  longDelta: 0.0421,
+}
 
 export default class SchoolsScreen extends React.Component {
   static navigationOptions = {
@@ -27,6 +33,7 @@ export default class SchoolsScreen extends React.Component {
   };
 
   state = {
+    region: null,
     schools: [],
     loading: true,
     page: 1,
@@ -34,10 +41,33 @@ export default class SchoolsScreen extends React.Component {
     searchLoading: false
   };
 
+  getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied'
+      })
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    const region = {
+      lat: location.coords.latitude,
+      long: location.coords.longitude,
+    }
+
+    await this.setState({region});
+  }
+
   loadResources = async page => {
     try {
       const url = `${PROXY_URL}/schools`;
-      let response = await axios.get(url, { params: { page } });
+      let response;
+      if (this.state.region) {
+        let loc = `${this.state.region.lat},${this.state.region.long}`;
+        response = await axios.get(url, { params: { page, loc } })
+      } else {
+        response = await axios.get(url, { params: { page } });
+      }
       let data = response.data;
       return data.schools;
     } catch (error) {
@@ -46,6 +76,7 @@ export default class SchoolsScreen extends React.Component {
   };
 
   async componentDidMount() {
+    await this.getLocationAsync();
     let schools = await this.loadResources(this.state.page);
     this.setState({ schools, loading: false });
   }
