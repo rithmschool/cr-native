@@ -1,188 +1,192 @@
 import React from 'react';
 import {
-  Image,
-  Platform,
   ScrollView,
   StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+  ActivityIndicator,
+  TextInput
 } from 'react-native';
-import { WebBrowser } from 'expo';
+import { Container, Content, List } from 'native-base';
+import { Location, Permissions } from 'expo';
+import axios from 'axios';
+import SchoolCard from '../components/SchoolCard';
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
+import { PROXY_URL } from '../config';
 
-import { MonoText } from '../components/StyledText';
+const deltas = {
+  latDelta: 0.0922,
+  longDelta: 0.0421
+};
 
-export default class HomeScreen extends React.Component {
+export default class SchoolsScreen extends React.Component {
   static navigationOptions = {
-    header: null,
+    title: 'Schools',
+    headerStyle: {
+      backgroundColor: '#4F922F'
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+      fontFamily: 'share-tech',
+      fontSize: 25
+    }
   };
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.welcomeContainer}>
-            <Image
-              source={
-                __DEV__
-                  ? require('../assets/images/robot-dev.png')
-                  : require('../assets/images/robot-prod.png')
-              }
-              style={styles.welcomeImage}
-            />
-          </View>
+  state = {
+    region: null,
+    schools: [],
+    loading: true,
+    page: 1,
+    search: '',
+    searchLoading: false
+  };
 
-          <View style={styles.getStartedContainer}>
-            {this._maybeRenderDevelopmentModeWarning()}
+  getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied'
+      });
+    }
 
-            <Text style={styles.getStartedText}>Get started by opening</Text>
+    let location = await Location.getCurrentPositionAsync({});
+    const region = {
+      lat: location.coords.latitude,
+      long: location.coords.longitude
+    };
 
-            <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-              <MonoText style={styles.codeHighlightText}>screens/HomeScreen.js</MonoText>
-            </View>
+    await this.setState({ region });
+  };
 
-            <Text style={styles.getStartedText}>
-              Change this text and your app will automatically reload.
-            </Text>
-          </View>
+  loadResources = async page => {
+    try {
+      const url = `${PROXY_URL}/schools`;
+      let response;
+      if (this.state.region) {
+        let loc = `${this.state.region.lat},${this.state.region.long}`;
+        response = await axios.get(url, { params: { page, loc } });
+      } else {
+        response = await axios.get(url, { params: { page } });
+      }
+      let data = response.data;
+      return data.schools;
+    } catch (error) {
+      console.log('Error:', error);
+    }
+  };
 
-          <View style={styles.helpContainer}>
-            <TouchableOpacity onPress={this._handleHelpPress} style={styles.helpLink}>
-              <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-
-        <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
-
-          <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-            <MonoText style={styles.codeHighlightText}>navigation/MainTabNavigator.js</MonoText>
-          </View>
-        </View>
-      </View>
-    );
+  async componentDidMount() {
+    await this.getLocationAsync();
+    let schools = await this.loadResources(this.state.page);
+    this.setState({ schools, loading: false });
   }
 
-  _maybeRenderDevelopmentModeWarning() {
-    if (__DEV__) {
-      const learnMoreButton = (
-        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-      );
+  async componentDidUpdate(prevProps, prevState) {
+    if (prevState.page !== this.state.page) {
+      let newSchools = await this.loadResources(this.state.page);
 
-      return (
-        <Text style={styles.developmentModeText}>
-          Development mode is enabled, your app will be slower but you can use useful development
-          tools. {learnMoreButton}
-        </Text>
-      );
-    } else {
-      return (
-        <Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
-        </Text>
-      );
+      const updatedSchools = [...this.state.schools, ...newSchools];
+      this.setState({
+        schools: updatedSchools
+      });
     }
   }
 
-  _handleLearnMorePress = () => {
-    WebBrowser.openBrowserAsync('https://docs.expo.io/versions/latest/guides/development-mode');
-  };
-
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
+  //returns true if you are 20 pixels from the bottom of the page to allow for
+  //infinite scroll.
+  isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    const paddingToBottom = 20;
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
     );
   };
+
+   //updates state to load next page if you are close to bottom or state search is empty
+  handleScroll = evt => {
+    if (this.state.search === '' && this.isCloseToBottom(evt.nativeEvent)) {
+      let nextPage = this.state.page + 1;
+      this.setState({
+        page: nextPage
+      });
+    }
+  };
+
+  searchAPI = search => axios.get(`${PROXY_URL}/schools?search=${search}`);
+
+  //sends a request after 250 milliseconds, but will only resolve the last promise
+  searchAPIDebounced = AwesomeDebouncePromise(this.searchAPI, 250);
+
+  async handleChange(search) {
+    // Update the search input with what they typed
+    this.setState({ search, searchLoading: true });
+    const schools = await this.searchAPIDebounced(search);
+    //Update state with the new schools
+    this.setState({ schools: schools.data.schools, searchLoading: false });
+  }
+
+  render() {
+    if (this.state.loading) {
+      return (
+        <ActivityIndicator
+          size="large"
+          color="#4F922F"
+          style={styles.activityIndicator}
+        />
+      );
+    }
+    let schoolCards = this.state.schools.map(school => {
+      if (
+        this.state.search === '' ||
+        school.name.toLowerCase().includes(this.state.search.toLowerCase())
+      ) {
+        return (
+          <SchoolCard
+            school={school}
+            navigate={() =>
+              this.props.navigation.navigate('School', { id: school.id })
+            }
+            key={school.id}
+          />
+        );
+      }
+    });
+
+    return (
+      <Container>
+        <TextInput
+          lable="Search"
+          placeholder="Search by school name"
+          value={this.state.search}
+          onChangeText={search => this.handleChange(search)}
+          style={styles.search}
+        />
+        {this.state.searchLoading}
+        <Content onScroll={this.handleScroll}>
+          {this.state.searchLoading ? (
+            <ActivityIndicator
+              size="large"
+              color="#4F922F"
+              style={styles.activityIndicator}
+            />
+          ) : null}
+          <List>{schoolCards}</List>
+        </Content>
+      </Container>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  activityIndicator: {
     flex: 1,
-    backgroundColor: '#fff',
+    flexDirection: 'column',
+    justifyContent: 'center'
   },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: 'center',
-  },
-  contentContainer: {
-    paddingTop: 30,
-  },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
-  },
+  search: {
+    flex: 0,
+    flexDirection: 'column',
+    padding: 25,
+    fontWeight: 'bold',
+    fontSize: 20
+  }
 });

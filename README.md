@@ -22,3 +22,9 @@ React Native App for Course Report
 Reference README at proxy server repo for more information.
 
 # TODO
+
+### Add Sort by Current Location Button
+The schools screen currently sorts by location automatically but we would like to add a button that activates this functionality.
+
+### Add Tests 
+We tests would be helpful for understanding what is going wrong when things go wrong. 

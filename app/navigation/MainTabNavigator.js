@@ -8,12 +8,39 @@ import {
 import TabBarIcon from '../components/TabBarIcon';
 import SchoolsScreen from '../screens/SchoolsScreen';
 import BlogScreen from '../screens/BlogScreen';
+import PostScreen from '../screens/PostScreen';
+import SchoolScreen from '../screens/SchoolScreen';
+import ContactScreen from '../screens/ContactScreen';
+import HomeScreen from '../screens/HomeScreen';
+
+const HomeStack = createStackNavigator({
+  Home: HomeScreen,
+  School: SchoolScreen
+});
+
+HomeStack.navigationOptions = {
+  tabBarOptions: {
+    activeTintColor: '#4F922F'
+  },
+  tabBarLabel: 'Home',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? `ios-home` : 'md-home'}
+    />
+  )
+};
 
 const SchoolsStack = createStackNavigator({
-  School: SchoolsScreen
+  Schools: SchoolsScreen,
+  School: SchoolScreen,
+  Contact: ContactScreen
 });
 
 SchoolsStack.navigationOptions = {
+  tabBarOptions: {
+    activeTintColor: '#4F922F'
+  },
   tabBarLabel: 'Schools',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
@@ -24,10 +51,14 @@ SchoolsStack.navigationOptions = {
 };
 
 const BlogStack = createStackNavigator({
-  Blog: BlogScreen
+  Blog: BlogScreen,
+  Post: PostScreen
 });
 
 BlogStack.navigationOptions = {
+  tabBarOptions: {
+    activeTintColor: '#4F922F'
+  },
   tabBarLabel: 'Blog',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
@@ -38,6 +69,7 @@ BlogStack.navigationOptions = {
 };
 
 export default createBottomTabNavigator({
+  HomeStack,
   SchoolsStack,
   BlogStack
 });
